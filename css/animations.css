@@ -1,26 +1,78 @@
-.hero-image img{
+.hero-left{
 
-animation:floatImage 4s ease-in-out infinite;
+animation:leftFade 1s ease;
 
 }
 
-@keyframes floatImage{
+.hero-right{
+
+animation:rightFade 1.2s ease;
+
+}
+
+.hero-image{
+
+animation:float 6s ease-in-out infinite;
+
+}
+
+@keyframes leftFade{
+
+from{
+
+opacity:0;
+
+transform:translateX(-70px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+@keyframes rightFade{
+
+from{
+
+opacity:0;
+
+transform:translateX(70px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+@keyframes float{
 
 0%{
 
-transform:translateY(0);
+transform:translateY(0px);
 
 }
 
 50%{
 
-transform:translateY(-18px);
+transform:translateY(-20px);
 
 }
 
 100%{
 
-transform:translateY(0);
+transform:translateY(0px);
 
 }
 

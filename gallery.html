@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gallery | ShotMarket</title>
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Your existing CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body>
+
+    <!-- ==================================================
+         NAVBAR
+         ================================================== -->
+
+    <header class="gallery-header">
+
+        <nav class="navbar container">
+
+            <!-- Logo -->
+
+            <a href="index.html" class="brand">
+
+                <span class="brand-icon">
+                    <i class="fa-solid fa-camera"></i>
+                </span>
+
+                <span>ShotMarket</span>
+
+            </a>
+
+
+            <!-- Navigation -->
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#features">
+                        Features
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="gallery.html"
+                        class="active"
+                    >
+                        Gallery
+                    </a>
+                </li>
+
+                <li>
+                    <a href="pricing.html">
+                        Pricing
+                    </a>
+                </li>
+
+                <li>
+                    <a href="index.html#contact">
+                        Contact
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <!-- Right side -->
+
+            <div class="nav-buttons">
+
+                <a
+                    href="login.html"
+                    class="login"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="register.html"
+                    class="register"
+                >
+                    Get Started
+                </a>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ==================================================
+         MAIN GALLERY
+         ================================================== -->
+
+    <main class="gallery-page">
+
+
+        <!-- ==================================================
+             ALBUM HERO
+             ================================================== -->
+
+        <section class="album-hero container">
+
+            <div class="album-info">
+
+                <span class="eyebrow">
+                    <i class="fa-solid fa-lock"></i>
+                    PRIVATE CLIENT GALLERY
+                </span>
+
+
+                <h1 id="albumTitle">
+                    Loading Album...
+                </h1>
+
+
+                <p id="albumDescription">
+                    Your photographer has prepared your private
+                    photo gallery.
+                </p>
+
+
+                <div class="album-meta">
+
+                    <span>
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <span id="albumDate">
+                            —
+                        </span>
+                    </span>
+
+
+                    <span>
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <span id="albumLocation">
+                            —
+                        </span>
+                    </span>
+
+
+                    <span>
+                        <i class="fa-regular fa-images"></i>
+
+                        <span id="albumPhotoCount">
+                            0 photos
+                        </span>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Photographer information -->
+
+            <div class="photographer-card">
+
+                <div class="photographer-avatar">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        PHOTOGRAPHER
+                    </span>
+
+                    <strong>
+                        ShotMarket Photographer
+                    </strong>
+
+                    <small>
+                        Professional Photography
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             TOOLBAR
+             ================================================== -->
+
+        <section class="gallery-toolbar container">
+
+            <div>
+
+                <h2>
+                    Your Photos
+                </h2>
+
+                <p>
+                    Select the photos you want to purchase
+                    and download.
+                </p>
+
+            </div>
+
+
+            <div class="gallery-actions">
+
+                <button
+                    type="button"
+                    id="selectAllBtn"
+                    class="secondary-btn"
+                >
+
+                    <i class="fa-regular fa-square-check"></i>
+
+                    Select All
+
+                </button>
+
+
+                <span
+                    id="selectedCounter"
+                    class="selected-counter"
+                >
+                    0 selected
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PHOTO GRID
+             ================================================== -->
+
+        <section class="photo-section container">
+
+            <div
+                id="photoGrid"
+                class="photo-grid"
+            >
+
+                <!-- JavaScript will insert photos here -->
+
+            </div>
+
+
+            <!-- Empty state -->
+
+            <div
+                id="emptyState"
+                class="empty-state"
+                style="display: none;"
+            >
+
+                <div class="empty-icon">
+
+                    <i class="fa-regular fa-images"></i>
+
+                </div>
+
+                <h2>
+                    No photos found
+                </h2>
+
+                <p>
+                    This gallery doesn't contain any photos yet.
+                </p>
+
+                <a
+                    href="index.html"
+                    class="secondary-btn"
+                >
+                    Return Home
+                </a>
+
+            </div>
+
+
+            <!-- Error state -->
+
+            <div
+                id="errorState"
+                class="empty-state"
+                style="display: none;"
+            >
+
+                <div class="empty-icon error-icon">
+
+                    <i class="fa-solid fa-link-slash"></i>
+
+                </div>
+
+                <h2>
+                    Gallery Not Found
+                </h2>
+
+                <p>
+                    We couldn't find this gallery. Please check
+                    your QR code or gallery link.
+                </p>
+
+                <a
+                    href="index.html"
+                    class="secondary-btn"
+                >
+                    Return Home
+                </a>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ==================================================
+         BOTTOM PURCHASE BAR
+         ================================================== -->
+
+    <div
+        id="purchaseBar"
+        class="purchase-bar"
+    >
+
+        <div class="purchase-info">
+
+            <div class="purchase-icon">
+
+                <i class="fa-solid fa-images"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    <span id="purchaseCount">
+                        0
+                    </span>
+                    photos selected
+                </strong>
+
+                <small>
+                    Select the photos you want to download
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="continuePaymentBtn"
+            class="primary-btn"
+            disabled
+        >
+
+            Continue to Payment
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         PHOTO LIGHTBOX
+         ================================================== -->
+
+    <div
+        id="lightbox"
+        class="lightbox"
+    >
+
+        <button
+            type="button"
+            id="closeLightbox"
+            class="lightbox-close"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+
+        <button
+            type="button"
+            id="previousPhoto"
+            class="lightbox-arrow previous"
+        >
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+
+        <img
+            id="lightboxImage"
+            src=""
+            alt="Preview"
+        >
+
+
+        <button
+            type="button"
+            id="nextPhoto"
+            class="lightbox-arrow next"
+        >
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+
+        <div
+            id="lightboxCounter"
+            class="lightbox-counter"
+        >
+            1 / 1
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         JAVASCRIPT
+         ================================================== -->
+
+    <script src="js/main.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/gallery.js"></script>
+
+</body>
+
+</html>

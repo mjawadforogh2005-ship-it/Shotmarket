@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ShotMarket | Secure Payment</title>
+
+
+    <!-- Existing project CSS -->
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+
+    <!-- Payment CSS -->
+
+    <link rel="stylesheet" href="css/payment.css">
+
+</head>
+
+
+<body class="payment-page">
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header>
+
+    <nav class="navbar container">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                <i class="fa-solid fa-camera"></i>
+            </span>
+
+            <span>
+                ShotMarket
+            </span>
+
+        </a>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="gallery.html">
+                    Gallery
+                </a>
+            </li>
+
+            <li>
+                <a href="pricing.html">
+                    Pricing
+                </a>
+            </li>
+
+            <li>
+                <a href="contact.html">
+                    Contact
+                </a>
+            </li>
+
+        </ul>
+
+
+        <div class="nav-buttons">
+
+            <a
+                href="gallery.html"
+                class="login"
+            >
+                Back to Gallery
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =====================================================
+     PAYMENT MAIN
+===================================================== -->
+
+<main class="payment-container">
+
+
+    <!-- HEADER -->
+
+    <section class="payment-header">
+
+        <div class="payment-badge">
+
+            <span>●</span>
+
+            SECURE PHOTO DELIVERY
+
+        </div>
+
+
+        <h1>
+
+            Complete your
+            <span>photo order.</span>
+
+        </h1>
+
+
+        <p>
+
+            Your photographs are ready.
+            Complete the payment step below
+            to unlock your downloads.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PAYMENT CONTENT
+    ================================================== -->
+
+    <section class="payment-layout container">
+
+
+        <!-- LEFT SIDE -->
+
+        <div class="payment-main-card">
+
+
+            <div class="payment-card-header">
+
+                <div>
+
+                    <span class="step-label">
+                        STEP 01
+                    </span>
+
+                    <h2>
+                        Payment Information
+                    </h2>
+
+                </div>
+
+
+                <div class="secure-icon">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ALBUM INFORMATION -->
+
+            <div
+                class="album-summary"
+                id="albumSummary"
+            >
+
+                <div class="summary-icon">
+
+                    <i class="fa-solid fa-images"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        PHOTO ALBUM
+                    </span>
+
+                    <h3 id="albumName">
+                        Loading album...
+                    </h3>
+
+                    <p id="albumDetails">
+                        Please wait...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PAYMENT AMOUNT -->
+
+            <div class="amount-section">
+
+                <span>
+                    TOTAL AMOUNT
+                </span>
+
+
+                <div class="amount">
+
+                    <strong id="paymentAmount">
+                        0
+                    </strong>
+
+                    <span id="paymentCurrency">
+                        KZT
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BANK INFORMATION -->
+
+            <div class="bank-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span>
+                            BANK TRANSFER
+                        </span>
+
+                        <h3>
+                            Photographer's Bank Information
+                        </h3>
+
+                    </div>
+
+                    <div class="bank-badge">
+                        BANK
+                    </div>
+
+                </div>
+
+
+
+                <!-- BANK NAME -->
+
+                <div class="bank-row">
+
+                    <div class="bank-label">
+
+                        <i class="fa-solid fa-building-columns"></i>
+
+                        <span>
+                            Bank
+                        </span>
+
+                    </div>
+
+
+                    <strong id="bankName">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <!-- ACCOUNT NAME -->
+
+                <div class="bank-row">
+
+                    <div class="bank-label">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <span>
+                            Account Name
+                        </span>
+
+                    </div>
+
+
+                    <strong id="accountName">
+                        —
+                    </strong>
+
+                </div>
+
+
+
+                <!-- ACCOUNT NUMBER -->
+
+                <div class="bank-row copy-row">
+
+                    <div class="bank-label">
+
+                        <i class="fa-solid fa-credit-card"></i>
+
+                        <span>
+                            Account Number
+                        </span>
+
+                    </div>
+
+
+                    <div class="copy-value">
+
+                        <strong id="accountNumber">
+                            —
+                        </strong>
+
+
+                        <button
+                            type="button"
+                            id="copyAccount"
+                            class="copy-button"
+                        >
+
+                            <i class="fa-regular fa-copy"></i>
+
+                            Copy
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- IBAN -->
+
+                <div class="bank-row copy-row">
+
+                    <div class="bank-label">
+
+                        <i class="fa-solid fa-file-invoice"></i>
+
+                        <span>
+                            IBAN
+                        </span>
+
+                    </div>
+
+
+                    <div class="copy-value">
+
+                        <strong id="iban">
+                            —
+                        </strong>
+
+
+                        <button
+                            type="button"
+                            id="copyIban"
+                            class="copy-button"
+                        >
+
+                            <i class="fa-regular fa-copy"></i>
+
+                            Copy
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PAYMENT NOTE -->
+
+            <div class="payment-note">
+
+                <div class="note-icon">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Important
+                    </strong>
+
+                    <p>
+
+                        Please transfer the exact amount
+                        shown above and use the account
+                        information provided by the
+                        photographer.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONFIRM PAYMENT -->
+
+            <button
+                type="button"
+                id="confirmPayment"
+                class="confirm-payment"
+            >
+
+                <span>
+                    I Have Made the Payment
+                </span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+
+
+            <!-- DEMO NOTICE -->
+
+            <p class="demo-notice">
+
+                <i class="fa-solid fa-flask"></i>
+
+                Demo payment system — no real transaction
+                is processed.
+
+            </p>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT SIDE
+        ================================================== -->
+
+        <aside class="payment-side-card">
+
+
+            <div class="side-icon">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+
+            <h2>
+
+                Your photos are
+                <span>almost ready.</span>
+
+            </h2>
+
+
+            <p>
+
+                Once the payment step is completed,
+                you'll be able to return to your gallery
+                and download your purchased photographs.
+
+            </p>
+
+
+
+            <div class="process-list">
+
+
+                <div class="process-item active">
+
+                    <div class="process-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Payment
+                        </strong>
+
+                        <span>
+                            Transfer the amount
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="process-line"></div>
+
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Confirmation
+                        </strong>
+
+                        <span>
+                            Confirm your payment
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="process-line"></div>
+
+
+
+                <div class="process-item">
+
+                    <div class="process-number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Download
+                        </strong>
+
+                        <span>
+                            Get your photographs
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     SUCCESS MODAL
+===================================================== -->
+
+<div
+    class="success-modal"
+    id="successModal"
+>
+
+    <div class="success-modal-card">
+
+
+        <div class="success-check">
+
+            <i class="fa-solid fa-check"></i>
+
+        </div>
+
+
+        <h2>
+            Payment Confirmed
+        </h2>
+
+
+        <p>
+
+            Your payment has been recorded
+            successfully.
+
+        </p>
+
+
+        <span class="demo-label">
+
+            DEMO TRANSACTION
+
+        </span>
+
+
+        <button
+            type="button"
+            id="returnToGallery"
+            class="return-gallery"
+        >
+
+            Return to Gallery
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FONT AWESOME
+===================================================== -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js">
+</script>
+
+
+
+<!-- =====================================================
+     SHOTMARKET JAVASCRIPT
+===================================================== -->
+
+<script src="js/main.js"></script>
+
+<script src="js/navbar.js"></script>
+
+<script src="js/storage.js"></script>
+
+<script src="js/payment.js"></script>
+
+
+</body>
+
+</html>

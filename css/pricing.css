@@ -1,0 +1,1273 @@
+/* =========================================================
+   SHOTMARKET
+   PREMIUM PRICING PAGE
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+body {
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(234, 194, 61, 0.07),
+            transparent 35%
+        ),
+        #07101f;
+
+    color: #f5f7fb;
+
+    font-family: "Inter", sans-serif;
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.site-header {
+    width: 100%;
+
+    padding: 18px 20px 0;
+}
+
+
+.pricing-navbar {
+    max-width: 1160px;
+
+    margin: 0 auto;
+
+    min-height: 64px;
+
+    padding: 0 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    background:
+        rgba(15, 25, 42, 0.88);
+
+    border: 1px solid #25344b;
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(16px);
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+
+/* BRAND */
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #f7f8fa;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+}
+
+
+.brand-icon {
+    width: 32px;
+
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #e8c33f;
+
+    color: #07101f;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+
+/* NAV LINKS */
+
+.pricing-nav-links {
+    list-style: none;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 28px;
+
+    margin: 0;
+
+    padding: 0;
+}
+
+
+.pricing-nav-links a {
+    position: relative;
+
+    color: #aeb8c8;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    transition:
+        color 0.25s ease;
+}
+
+
+.pricing-nav-links a:hover,
+.pricing-nav-links a.active {
+    color: #ffffff;
+}
+
+
+.pricing-nav-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: -7px;
+
+    width: 0;
+
+    height: 2px;
+
+    background: #e8c33f;
+
+    transition: width 0.25s ease;
+}
+
+
+.pricing-nav-links a:hover::after,
+.pricing-nav-links a.active::after {
+    width: 100%;
+}
+
+
+/* NAV ACTIONS */
+
+.pricing-nav-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.nav-login {
+    color: #f4f6f9;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.nav-get-started {
+    padding: 11px 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1d15a,
+            #dfb72d
+        );
+
+    color: #0a111d;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    border-radius: 999px;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.nav-get-started:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(232, 195, 63, 0.25);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.pricing-hero {
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+    padding:
+        90px 20px 50px;
+}
+
+
+.pricing-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 15px;
+
+    border: 1px solid #34445b;
+
+    border-radius: 999px;
+
+    color: #e8c33f;
+
+    background:
+        rgba(232, 195, 63, 0.05);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 25px;
+}
+
+
+.pricing-badge i {
+    font-size: 11px;
+}
+
+
+.pricing-hero h1 {
+    margin: 0 auto;
+
+    max-width: 780px;
+
+    font-size: clamp(42px, 6vw, 68px);
+
+    line-height: 1.03;
+
+    letter-spacing: -3px;
+
+    font-weight: 800;
+
+    color: #f7f8fa;
+}
+
+
+.pricing-hero h1 span {
+    display: block;
+
+    color: #e8c33f;
+}
+
+
+.pricing-hero > p {
+    max-width: 650px;
+
+    margin:
+        25px auto 0;
+
+    color: #9eabc0;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   BILLING TOGGLE
+========================================================= */
+
+.billing-wrapper {
+    margin-top: 32px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.billing-label {
+    color: #77869d;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.billing-label.active {
+    color: #ffffff;
+}
+
+
+.billing-label small {
+    margin-left: 6px;
+
+    padding: 4px 7px;
+
+    background: rgba(43, 211, 133, 0.1);
+
+    color: #35d58c;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.billing-toggle {
+    width: 50px;
+
+    height: 27px;
+
+    padding: 3px;
+
+    border: 1px solid #3a4960;
+
+    background: #151f30;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease;
+}
+
+
+.toggle-circle {
+    display: block;
+
+    width: 19px;
+
+    height: 19px;
+
+    border-radius: 50%;
+
+    background: #e8c33f;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.billing-toggle.yearly {
+    background: #4a3b0c;
+}
+
+
+.billing-toggle.yearly .toggle-circle {
+    transform: translateX(21px);
+}
+
+
+/* =========================================================
+   PRICING SECTION
+========================================================= */
+
+.pricing-section {
+    max-width: 1160px;
+
+    margin: 0 auto;
+
+    padding: 20px;
+}
+
+
+.pricing-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   PRICING CARD
+========================================================= */
+
+.pricing-card {
+    position: relative;
+
+    padding: 34px 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #121d2d,
+            #0d1727
+        );
+
+    border: 1px solid #29384e;
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.pricing-card:hover {
+    transform: translateY(-7px);
+
+    border-color: #46566d;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.25);
+}
+
+
+/* FEATURED */
+
+.featured-plan {
+    border:
+        1px solid rgba(232, 195, 63, 0.7);
+
+    box-shadow:
+        0 0 50px rgba(232, 195, 63, 0.07);
+}
+
+
+.featured-plan:hover {
+    border-color: #e8c33f;
+
+    box-shadow:
+        0 25px 70px rgba(232, 195, 63, 0.12);
+}
+
+
+/* POPULAR BADGE */
+
+.popular-badge {
+    position: absolute;
+
+    top: 0;
+
+    right: 25px;
+
+    padding: 7px 12px;
+
+    background: #e8c33f;
+
+    color: #07101f;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    border-radius:
+        0 0 8px 8px;
+}
+
+
+/* =========================================================
+   PLAN ICON
+========================================================= */
+
+.plan-icon {
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2d45d,
+            #dcb52d
+        );
+
+    color: #101a27;
+
+    border-radius: 13px;
+
+    margin-bottom: 24px;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   PLAN HEADER
+========================================================= */
+
+.plan-header h2 {
+    margin: 0 0 9px;
+
+    font-size: 23px;
+
+    color: #ffffff;
+}
+
+
+.plan-header p {
+    margin: 0;
+
+    min-height: 46px;
+
+    color: #8795a9;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.plan-price {
+    display: flex;
+
+    align-items: baseline;
+
+    margin-top: 25px;
+}
+
+
+.currency {
+    color: #e8c33f;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    margin-right: 3px;
+}
+
+
+.price {
+    color: #ffffff;
+
+    font-size: 48px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+}
+
+
+.period {
+    margin-left: 5px;
+
+    color: #718097;
+
+    font-size: 11px;
+}
+
+
+.plan-description {
+    margin-top: 13px;
+
+    min-height: 42px;
+
+    color: #8391a6;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PLAN BUTTON
+========================================================= */
+
+.plan-button {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 13px 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.primary-button {
+    background:
+        linear-gradient(
+            135deg,
+            #f2d45d,
+            #ddb72f
+        );
+
+    color: #09111d;
+}
+
+
+.primary-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(232, 195, 63, 0.2);
+}
+
+
+.secondary-button {
+    border: 1px solid #35455c;
+
+    background: #111c2d;
+
+    color: #ffffff;
+}
+
+
+.secondary-button:hover {
+    background: #182538;
+
+    border-color: #e8c33f;
+
+    color: #e8c33f;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.plan-divider {
+    height: 1px;
+
+    background: #26364b;
+
+    margin:
+        27px 0 22px;
+}
+
+
+.pricing-card h3 {
+    margin: 0 0 18px;
+
+    color: #d9e0e9;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.plan-features {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+.plan-features li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #aab5c5;
+
+    font-size: 11px;
+}
+
+
+.plan-features i {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 17px;
+
+    height: 17px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(46, 213, 133, 0.1);
+
+    color: #32d98b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.pricing-benefits {
+    max-width: 1160px;
+
+    margin: 0 auto;
+
+    padding:
+        110px 20px 70px;
+}
+
+
+.section-heading {
+    text-align: center;
+
+    max-width: 650px;
+
+    margin: 0 auto 45px;
+}
+
+
+.section-heading > span {
+    color: #e8c33f;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.section-heading h2 {
+    margin:
+        12px 0 14px;
+
+    color: #ffffff;
+
+    font-size: 36px;
+
+    letter-spacing: -1.5px;
+}
+
+
+.section-heading p {
+    color: #8492a7;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+.benefits-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+}
+
+
+.benefit-card {
+    padding: 25px;
+
+    background: #101b2b;
+
+    border: 1px solid #26364b;
+
+    border-radius: 17px;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(232, 195, 63, 0.45);
+}
+
+
+.benefit-icon {
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(232, 195, 63, 0.12);
+
+    color: #e8c33f;
+
+    border-radius: 11px;
+
+    margin-bottom: 18px;
+}
+
+
+.benefit-card h3 {
+    margin: 0 0 10px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+
+.benefit-card p {
+    margin: 0;
+
+    color: #7e8da3;
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.pricing-cta {
+    max-width: 1120px;
+
+    margin:
+        30px auto 80px;
+
+    padding: 70px 30px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(232, 195, 63, 0.15),
+            transparent 55%
+        ),
+        #101b2b;
+
+    border: 1px solid #2d3d54;
+
+    border-radius: 25px;
+}
+
+
+.pricing-cta::before {
+    content: "";
+
+    position: absolute;
+
+    width: 350px;
+
+    height: 350px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(232, 195, 63, 0.04);
+
+    filter: blur(40px);
+
+    top: -200px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+}
+
+
+.cta-content {
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.cta-label {
+    color: #e8c33f;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.cta-content h2 {
+    max-width: 700px;
+
+    margin:
+        15px auto;
+
+    color: #ffffff;
+
+    font-size: clamp(32px, 5vw, 50px);
+
+    line-height: 1.1;
+
+    letter-spacing: -2px;
+}
+
+
+.cta-content h2 span {
+    color: #e8c33f;
+}
+
+
+.cta-content p {
+    color: #8795a9;
+
+    font-size: 13px;
+
+    margin-bottom: 28px;
+}
+
+
+.cta-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+.cta-primary,
+.cta-secondary {
+    padding: 13px 22px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.cta-primary {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    background: #e8c33f;
+
+    color: #09111d;
+}
+
+
+.cta-secondary {
+    border: 1px solid #35455c;
+
+    color: #ffffff;
+}
+
+
+.cta-primary:hover,
+.cta-secondary:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.pricing-footer {
+    max-width: 1160px;
+
+    margin: 0 auto;
+
+    padding:
+        25px 20px 40px;
+
+    border-top: 1px solid #1d2b3e;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.footer-brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #ffffff;
+
+    font-size: 13px;
+}
+
+
+.footer-brand .brand-icon {
+    width: 27px;
+
+    height: 27px;
+
+    font-size: 11px;
+}
+
+
+.pricing-footer p {
+    color: #66758b;
+
+    font-size: 10px;
+
+    margin: 0;
+}
+
+
+.footer-links {
+    display: flex;
+
+    gap: 18px;
+}
+
+
+.footer-links a {
+    color: #7e8ca0;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.footer-links a:hover {
+    color: #e8c33f;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .pricing-nav-links {
+        display: none;
+    }
+
+    .pricing-grid {
+        grid-template-columns:
+            1fr;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    .benefits-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .site-header {
+        padding:
+            10px 10px 0;
+    }
+
+    .pricing-navbar {
+        padding: 0 15px;
+
+        min-height: 58px;
+
+        border-radius: 14px;
+    }
+
+    .nav-login {
+        display: none;
+    }
+
+    .brand {
+        font-size: 16px;
+    }
+
+    .nav-get-started {
+        padding:
+            9px 15px;
+
+        font-size: 10px;
+    }
+
+    .pricing-hero {
+        padding:
+            65px 18px 35px;
+    }
+
+    .pricing-hero h1 {
+        font-size: 42px;
+
+        letter-spacing: -2px;
+    }
+
+    .pricing-hero > p {
+        font-size: 13px;
+    }
+
+    .pricing-section {
+        padding:
+            15px;
+    }
+
+    .pricing-card {
+        padding: 28px 23px;
+    }
+
+    .benefits-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .pricing-benefits {
+        padding:
+            75px 18px 50px;
+    }
+
+    .section-heading h2 {
+        font-size: 30px;
+    }
+
+    .pricing-cta {
+        margin:
+            20px 15px 60px;
+
+        padding:
+            55px 20px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .cta-primary,
+    .cta-secondary {
+        justify-content: center;
+    }
+
+    .pricing-footer {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}

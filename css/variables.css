@@ -1,0 +1,59 @@
+/* ===========================================
+   SHOTMARKET DESIGN SYSTEM
+   =========================================== */
+
+:root{
+
+/* COLORS */
+
+--color-primary:#D4AF37;
+--color-primary-light:#F5D76E;
+--color-primary-dark:#A67C00;
+
+--color-bg:#08111F;
+--color-bg-secondary:#101B2E;
+--color-bg-card:rgba(255,255,255,.05);
+
+--color-white:#FFFFFF;
+
+--color-text:#F8FAFC;
+
+--color-text-secondary:#CBD5E1;
+
+--color-border:rgba(255,255,255,.08);
+
+--color-success:#22C55E;
+
+--color-danger:#EF4444;
+
+
+/* SHADOWS */
+
+--shadow-small:0 10px 25px rgba(0,0,0,.18);
+
+--shadow-medium:0 20px 45px rgba(0,0,0,.30);
+
+--shadow-large:0 30px 70px rgba(0,0,0,.45);
+
+
+/* BORDER */
+
+--radius-small:12px;
+
+--radius-medium:18px;
+
+--radius-large:30px;
+
+--radius-pill:999px;
+
+
+/* TRANSITIONS */
+
+--transition:.35s ease;
+
+
+/* CONTAINER */
+
+--container:1350px;
+
+}

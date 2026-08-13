@@ -1,0 +1,483 @@
+/* =========================================
+   SHOTMARKET - CREATE ALBUM
+   ========================================= */
+
+.upload-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(232, 193, 62, 0.08), transparent 28%),
+        linear-gradient(135deg, #08101e 0%, #0b1322 55%, #0e1726 100%);
+    padding-bottom: 80px;
+}
+
+/* -----------------------------------------
+   PAGE HEADER
+----------------------------------------- */
+
+.upload-container {
+    width: min(1180px, 92%);
+    margin: 0 auto;
+}
+
+.upload-header {
+    padding: 55px 0 35px;
+}
+
+.upload-eyebrow {
+    color: #e8c13e;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.upload-header h1 {
+    color: #f8fafc;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -1.5px;
+}
+
+.upload-header p {
+    color: #94a3b8;
+    font-size: 15px;
+    max-width: 650px;
+    line-height: 1.7;
+}
+
+/* -----------------------------------------
+   MAIN GRID
+----------------------------------------- */
+
+.album-builder {
+    display: grid;
+    grid-template-columns: 1.5fr 0.85fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.upload-card {
+    background: rgba(17, 27, 43, 0.88);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.card-title h2 {
+    color: #f8fafc;
+    font-size: 20px;
+}
+
+.card-title span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* -----------------------------------------
+   FORM
+----------------------------------------- */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0b1423;
+    color: #f8fafc;
+    border: 1px solid #243247;
+    border-radius: 10px;
+    padding: 13px 14px;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    transition: 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #e8c13e;
+    box-shadow: 0 0 0 3px rgba(232, 193, 62, 0.08);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 105px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* -----------------------------------------
+   PRIVACY OPTIONS
+----------------------------------------- */
+
+.privacy-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.privacy-option {
+    position: relative;
+}
+
+.privacy-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.privacy-option label {
+    display: block;
+    padding: 15px;
+    border: 1px solid #263449;
+    background: #0b1423;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.privacy-option label strong {
+    display: block;
+    color: #f8fafc;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.privacy-option label small {
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.privacy-option input:checked + label {
+    border-color: #e8c13e;
+    background: rgba(232, 193, 62, 0.08);
+}
+
+/* -----------------------------------------
+   DROPZONE
+----------------------------------------- */
+
+.dropzone {
+    border: 1.5px dashed #34445c;
+    border-radius: 16px;
+    padding: 40px 25px;
+    text-align: center;
+    background: rgba(8, 16, 30, 0.55);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+    border-color: #e8c13e;
+    background: rgba(232, 193, 62, 0.05);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 15px;
+    background: rgba(232, 193, 62, 0.12);
+    color: #e8c13e;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
+}
+
+.dropzone h3 {
+    color: #f8fafc;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.dropzone p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.browse-btn {
+    display: inline-block;
+    background: #e8c13e;
+    color: #111827;
+    padding: 10px 18px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#photoInput {
+    display: none;
+}
+
+/* -----------------------------------------
+   PHOTO PREVIEW
+----------------------------------------- */
+
+.preview-section {
+    margin-top: 25px;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.preview-header h3 {
+    color: #f8fafc;
+    font-size: 15px;
+}
+
+.photo-count {
+    color: #e8c13e;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.photo-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #0b1423;
+    border: 1px solid #243247;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-photo {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 25px;
+    height: 25px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-photo:hover {
+    background: #ef4444;
+}
+
+/* -----------------------------------------
+   BUTTONS
+----------------------------------------- */
+
+.create-album-btn {
+    width: 100%;
+    border: none;
+    margin-top: 25px;
+    padding: 15px 20px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #f0ce4b, #d9ae28);
+    color: #111827;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 12px 30px rgba(232, 193, 62, 0.15);
+}
+
+.create-album-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(232, 193, 62, 0.25);
+}
+
+/* -----------------------------------------
+   RIGHT SIDE - QR PREVIEW
+----------------------------------------- */
+
+.qr-card {
+    position: sticky;
+    top: 25px;
+}
+
+.qr-preview {
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.qr-placeholder {
+    width: 180px;
+    height: 180px;
+    border-radius: 15px;
+    border: 1px dashed #34445c;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    background: #0a1220;
+}
+
+.qr-placeholder span {
+    color: #475569;
+    font-size: 12px;
+}
+
+#qrcode {
+    display: none;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+#qrcode img {
+    display: block;
+}
+
+#downloadQr {
+    display: none;
+}
+
+.qr-preview h3 {
+    color: #f8fafc;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.qr-preview p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 270px;
+}
+
+.qr-status {
+    margin-top: 18px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+    font-size: 11px;
+}
+
+.qr-status.active {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+}
+
+.download-qr {
+    display: none;
+    margin-top: 15px;
+    padding: 10px 16px;
+    border: 1px solid #34445c;
+    background: transparent;
+    color: #e2e8f0;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.download-qr:hover {
+    border-color: #e8c13e;
+    color: #e8c13e;
+}
+
+/* -----------------------------------------
+   SUCCESS MESSAGE
+----------------------------------------- */
+
+.success-message {
+    display: none;
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 10px;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.success-message.show {
+    display: block;
+}
+
+/* -----------------------------------------
+   RESPONSIVE
+----------------------------------------- */
+
+@media (max-width: 850px) {
+
+    .album-builder {
+        grid-template-columns: 1fr;
+    }
+
+    .qr-card {
+        position: static;
+    }
+
+    .photo-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .upload-header {
+        padding-top: 35px;
+    }
+
+    .upload-card {
+        padding: 20px;
+    }
+
+    .form-row,
+    .privacy-options {
+        grid-template-columns: 1fr;
+    }
+
+    .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

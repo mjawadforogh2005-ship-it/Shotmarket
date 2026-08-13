@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | ShotMarket</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<!-- ============================= -->
+<!-- DASHBOARD NAVBAR -->
+<!-- ============================= -->
+
+<header class="dashboard-header">
+
+    <div class="dashboard-nav">
+
+        <!-- Logo -->
+        <a href="index.html" class="dashboard-logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+
+            <span>ShotMarket</span>
+
+        </a>
+
+
+        <!-- Navigation -->
+
+        <nav class="dashboard-links">
+
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Home
+            </a>
+
+            <a href="dashboard.html" class="active">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </a>
+
+            <a href="gallery.html">
+                <i class="fa-regular fa-images"></i>
+                Galleries
+            </a>
+
+            <a href="upload.html">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload
+            </a>
+
+        </nav>
+
+
+        <!-- User -->
+
+        <div class="dashboard-user">
+
+            <div class="user-avatar">
+                MJ
+            </div>
+
+            <div class="user-info">
+
+                <strong>Mohammad jawad forogh</strong>
+
+                <span>Photographer</span>
+
+            </div>
+
+            <button class="user-menu">
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ============================= -->
+<!-- MAIN DASHBOARD -->
+<!-- ============================= -->
+
+<main class="dashboard-main">
+
+
+    <!-- Welcome -->
+
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <p class="dashboard-label">
+                PHOTOGRAPHER DASHBOARD
+            </p>
+
+            <h1>
+                Welcome back, Mohammad jawad forgh.
+            </h1>
+
+            <p>
+                Manage your event galleries, photos and customer deliveries
+                from one place.
+            </p>
+
+        </div>
+
+<a href="upload.html" class="dashboard-create-btn">
+    <span>+</span> Create New Album
+</a>
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- STATISTICS -->
+    <!-- ============================= -->
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-regular fa-images"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Albums</span>
+
+                <strong>24</strong>
+
+                <small>
+                    <i class="fa-solid fa-arrow-up"></i>
+                    12% this month
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Photos Delivered</span>
+
+                <strong>12,480</strong>
+
+                <small>
+                    <i class="fa-solid fa-arrow-up"></i>
+                    18% this month
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-download"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Downloads</span>
+
+                <strong>8,942</strong>
+
+                <small>
+                    <i class="fa-solid fa-arrow-up"></i>
+                    9% this month
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-dollar-sign"></i>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Revenue</span>
+
+                <strong>$2,840</strong>
+
+                <small>
+                    <i class="fa-solid fa-arrow-up"></i>
+                    21% this month
+                </small>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- MAIN CONTENT GRID -->
+    <!-- ============================= -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- ============================= -->
+        <!-- RECENT ALBUMS -->
+        <!-- ============================= -->
+
+        <div class="dashboard-card albums-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        YOUR WORK
+                    </span>
+
+                    <h2>
+                        Recent Albums
+                    </h2>
+
+                </div>
+
+                <a href="gallery.html">
+                    View All
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <!-- Album -->
+
+            <div class="album-row">
+
+                <div class="album-image">
+
+                    <img
+                        src="assets/images/album-wedding.jpg"
+                        alt="Wedding album">
+
+                </div>
+
+                <div class="album-details">
+
+                    <h3>
+                        Ahmad & Sara Wedding
+                    </h3>
+
+                    <p>
+                        June 18, 2026 · 428 photos
+                    </p>
+
+                    <span class="status published">
+                        <i class="fa-solid fa-circle"></i>
+                        Published
+                    </span>
+
+                </div>
+
+                <button class="more-button">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+
+            </div>
+
+
+            <!-- Album -->
+
+            <div class="album-row">
+
+                <div class="album-image">
+
+                    <img
+                        src="assets/images/album-event.jpg"
+                        alt="Event album">
+
+                </div>
+
+                <div class="album-details">
+
+                    <h3>
+                        Astana Corporate Event
+                    </h3>
+
+                    <p>
+                        June 11, 2026 · 286 photos
+                    </p>
+
+                    <span class="status published">
+                        <i class="fa-solid fa-circle"></i>
+                        Published
+                    </span>
+
+                </div>
+
+                <button class="more-button">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+
+            </div>
+
+
+            <!-- Album -->
+
+            <div class="album-row">
+
+                <div class="album-image">
+
+                    <img
+                        src="assets/images/album-portrait.jpg"
+                        alt="Portrait album">
+
+                </div>
+
+                <div class="album-details">
+
+                    <h3>
+                        Summer Portrait Session
+                    </h3>
+
+                    <p>
+                        June 05, 2026 · 142 photos
+                    </p>
+
+                    <span class="status draft">
+                        <i class="fa-solid fa-circle"></i>
+                        Draft
+                    </span>
+
+                </div>
+
+                <button class="more-button">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ============================= -->
+        <!-- QR CODE CARD -->
+        <!-- ============================= -->
+
+        <div class="dashboard-card qr-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-eyebrow">
+                        CUSTOMER ACCESS
+                    </span>
+
+                    <h2>
+                        Your QR Code
+                    </h2>
+
+                </div>
+
+                <span class="qr-live">
+                    LIVE
+                </span>
+
+            </div>
+
+
+            <div class="qr-content">
+
+                <div class="qr-container">
+
+                    <div id="qr-code"></div>
+
+                </div>
+
+                <div class="qr-status">
+                    <span class="status-dot"></span>
+                    QR CODE ACTIVE
+                </div>
+
+                <h3>
+                    Scan to view your latest gallery
+                </h3>
+
+                <p>
+                    Customers can scan this QR code
+                    to access their private event gallery.
+                </p>
+
+                <div class="qr-actions">
+                    <button class="secondary-button" id="downloadQR">
+                        <i class="fa-solid fa-download"></i>
+                        Download QR Code
+                    </button>
+                    <button class="secondary-button" id="copyGalleryBtn">
+                        <i class="fa-solid fa-link"></i>
+                        Copy Gallery Link
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- QUICK ACTIONS -->
+    <!-- ============================= -->
+
+    <section class="quick-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="card-eyebrow">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>
+                    Manage your photography business
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+
+            <a href="upload.html" class="quick-card">
+
+                <div class="quick-icon">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Upload Photos
+                    </h3>
+
+                    <p>
+                        Add photos to a new or existing album.
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+            <a href="gallery.html" class="quick-card">
+
+                <div class="quick-icon">
+                    <i class="fa-regular fa-images"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Manage Galleries
+                    </h3>
+
+                    <p>
+                        View and manage your customer albums.
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+            <a href="payment.html" class="quick-card">
+
+                <div class="quick-icon">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Payment Settings
+                    </h3>
+
+                    <p>
+                        Configure your payment information.
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- ============================= -->
+<!-- DASHBOARD JAVASCRIPT -->
+<!-- ============================= -->
+
+<script src="js/main.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/storage.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

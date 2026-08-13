@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | ShotMarket</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+
+    <!-- Authentication CSS -->
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+
+<body>
+
+    <!-- ==========================================
+         AUTHENTICATION PAGE
+    =========================================== -->
+
+    <main class="auth-page">
+
+
+        <!-- BACK TO HOME -->
+
+        <a href="index.html" class="back-home">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to ShotMarket
+        </a>
+
+
+        <div class="auth-container">
+
+
+            <!-- ==================================
+                 LEFT SIDE
+            =================================== -->
+
+            <section class="auth-visual">
+
+                <div class="visual-overlay"></div>
+
+                <div class="visual-content">
+
+                    <div class="auth-logo">
+
+                        <div class="logo-icon">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+
+                        <span>ShotMarket</span>
+
+                    </div>
+
+
+                    <div class="visual-text">
+
+                        <span class="visual-label">
+                            FOR PHOTOGRAPHERS
+                        </span>
+
+                        <h1>
+                            Your photos.
+                            <br>
+                            <span>Your business.</span>
+                        </h1>
+
+                        <p>
+                            Upload, organize, share and deliver
+                            your photography through one beautiful
+                            platform.
+                        </p>
+
+                    </div>
+
+
+                    <div class="visual-footer">
+
+                        <div class="mini-stat">
+
+                            <strong>12K+</strong>
+
+                            <span>
+                                Albums delivered
+                            </span>
+
+                        </div>
+
+
+                        <div class="mini-stat">
+
+                            <strong>500+</strong>
+
+                            <span>
+                                Photographers
+                            </span>
+
+                        </div>
+
+
+                        <div class="mini-stat">
+
+                            <strong>98%</strong>
+
+                            <span>
+                                Happy clients
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 LOGIN FORM
+            =================================== -->
+
+            <section class="auth-form-section">
+
+                <div class="auth-form-wrapper">
+
+
+                    <div class="mobile-logo">
+
+                        <div class="logo-icon">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+
+                        <span>ShotMarket</span>
+
+                    </div>
+
+
+                    <div class="form-heading">
+
+                        <span class="form-eyebrow">
+                            WELCOME BACK
+                        </span>
+
+                        <h2>
+                            Sign in to your account
+                        </h2>
+
+                        <p>
+                            Welcome back. Enter your details
+                            to continue.
+                        </p>
+
+                    </div>
+
+
+                    <!-- LOGIN FORM -->
+
+                    <form id="loginForm" class="auth-form">
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email address
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-regular fa-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="form-group">
+
+                            <div class="label-row">
+
+                                <label for="password">
+                                    Password
+                                </label>
+
+                                <a href="#" class="forgot-password">
+                                    Forgot password?
+                                </a>
+
+                            </div>
+
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required>
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    id="togglePassword"
+                                    aria-label="Show password">
+
+                                    <i class="fa-regular fa-eye"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- REMEMBER -->
+
+                        <div class="remember-row">
+
+                            <label class="checkbox-label">
+
+                                <input
+                                    type="checkbox"
+                                    id="remember">
+
+                                <span class="custom-checkbox"></span>
+
+                                <span>
+                                    Remember me
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            class="auth-submit">
+
+                            Sign In
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+
+                        <!-- DIVIDER -->
+
+                        <div class="auth-divider">
+
+                            <span>or continue with</span>
+
+                        </div>
+
+
+                        <!-- SOCIAL LOGIN -->
+
+                        <div class="social-login">
+
+                            <button
+                                type="button"
+                                class="social-button">
+
+                                <i class="fa-brands fa-google"></i>
+
+                                Google
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="social-button">
+
+                                <i class="fa-brands fa-github"></i>
+
+                                GitHub
+
+                            </button>
+
+                        </div>
+
+
+                        <!-- REGISTER -->
+
+                        <p class="auth-switch">
+
+                            Don't have an account?
+
+                            <a href="register.html">
+                                Create one
+                            </a>
+
+                        </p>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- LOGIN JAVASCRIPT -->
+
+    <script>
+
+        /* ==========================================
+           PASSWORD VISIBILITY
+        ========================================== */
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+
+        togglePassword.addEventListener("click", function () {
+
+            const isPassword =
+                passwordInput.type === "password";
+
+            passwordInput.type =
+                isPassword ? "text" : "password";
+
+
+            this.innerHTML = isPassword
+
+                ? '<i class="fa-regular fa-eye-slash"></i>'
+
+                : '<i class="fa-regular fa-eye"></i>';
+
+        });
+
+
+        /* ==========================================
+           FRONTEND DEMO LOGIN
+        ========================================== */
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                alert(
+                    "Login functionality will be connected to the database in a later module."
+                );
+
+            });
+
+    </script>
+
+</body>
+
+</html>

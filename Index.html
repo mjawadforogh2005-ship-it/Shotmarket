@@ -3,121 +3,197 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/footer.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ShotMarket | Professional Photography Marketplace</title>
+<title>ShotMarket | Professional Photography Marketplace</title>
 
-    <!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <!-- Font Awesome -->
+<link rel="stylesheet" href="css/variables.css">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="css/reset.css">
 
-    <!-- CSS -->
+<link rel="stylesheet" href="css/navbar.css">
 
-    <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/hero.css">
 
-    <link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/components.css">
 
-    <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animations.css">
 
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/features.css">
+<link rel="stylesheet" href="css/how-it-works.css">
 </head>
 
 <body>
 
 <header>
 
-<nav class="navbar">
+<nav class="navbar container">
 
-<div class="logo">
+    <div class="logo">
+        <i class="fa-solid fa-camera"></i>
+        <span>ShotMarket</span>
+    </div>
 
-<i class="fa-solid fa-camera-retro"></i>
+    <ul class="nav-links">
 
-<h2>ShotMarket</h2>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-</div>
+        <li>
+            <a href="#features">Features</a>
+        </li>
 
-<ul class="nav-links">
+        <li>
+            <a href="gallery.html">Gallery</a>
+        </li>
 
-<li><a href="#">Home</a></li>
+        <li>
+            <a href="pricing.html">Pricing</a>
+        </li>
 
-<li><a href="#">Features</a></li>
+        <li>
+            <a href="contact.html">Contact</a>
+        </li>
 
-<li><a href="#">Gallery</a></li>
+    </ul>
 
-<li><a href="#">Pricing</a></li>
+    <div class="nav-buttons">
 
-<li><a href="#">Contact</a></li>
+        <a href="login.html" class="login">
+            Login
+        </a>
 
-</ul>
+        <a href="register.html" class="register">
+            Get Started
+        </a>
 
-<div class="buttons">
-
-<a href="login.html" class="login-btn">Login</a>
-
-<a href="register.html" class="register-btn">Register</a>
-
-</div>
+    </div>
 
 </nav>
 
 </header>
 
-<section class="hero">
 
-<div class="hero-content">
 
-<h1>
+<section class="features container" id="features">
 
-Capture Moments.<br>
+<div class="section-title">
 
-Deliver Memories.
-
-</h1>
+<h2>Everything a Photographer Needs</h2>
 
 <p>
 
-The premium platform for photographers to upload,
+One platform to upload, manage, sell and deliver photos beautifully.
 
-share, and securely sell event photos with QR codes.
+</p>
+</div>
+<div class="feature-grid">
+
+<div class="feature-card" tabindex="0" role="button" data-feature-link="upload.html" aria-label="Open Upload Albums">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-cloud-arrow-up"></i>
+
+</div>
+
+<h3>Upload Albums</h3>
+<p>
+            Upload unlimited event photos with an elegant dashboard.
+</p>
+</div>
+            <div class="feature-card" tabindex="0" role="button" data-feature-link="upload.html" aria-label="Open QR code generation">  
+        <div class="feature-icon">
+    <i class="fa-solid fa-qrcode"></i>
+            </div>
+                <h3>Generate QR Codes</h3>
+            <p>
+Each event automatically receives its own QR code.
+</p>
+</div>
+<div class="feature-card" tabindex="0" role="button" data-feature-link="payment.html" aria-label="Open payment page">
+<div class="feature-icon">
+<i class="fa-solid fa-credit-card"></i>
+</div>
+<h3>Receive Payments</h3>
+<p>
+Customers pay first and then securely download their images.
+</p>
+</div>
+<div class="feature-card" tabindex="0" role="button" data-feature-link="gallery.html" aria-label="Open private galleries">
+<div class="feature-icon">
+<i class="fa-solid fa-images"></i>
+</div>
+<h3>Private Galleries</h3>
+<p>
+Every client has their own protected gallery.
+</p>
+</div>
+<div class="feature-card" tabindex="0" role="button" data-feature-link="gallery.html" aria-label="Open fast download page">
+<div class="feature-icon">
+<i class="fa-solid fa-download"></i>
+</div>
+<h3>Fast Download</h3>
+
+<p>
+
+Original quality downloads with one click.
 
 </p>
 
-<div class="hero-buttons">
+</div>
 
-<a href="#" class="primary-btn">
+<div class="feature-card" tabindex="0" role="button" data-feature-link="dashboard.html" aria-label="Open secure storage dashboard">
 
-Get Started
+<div class="feature-icon">
 
-</a>
-
-<a href="#" class="secondary-btn">
-
-Live Demo
-
-</a>
+<i class="fa-solid fa-shield-halved"></i>
 
 </div>
 
+<h3>Secure Storage</h3>
+
+<p>
+
+Your photos remain protected with modern security.
+
+</p>
+
+</div>
 </div>
 
-<div class="hero-image">
+<div class="step">
 
-<img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=900"
-alt="photographer">
+<div class="step-number">4</div>
+
+<i class="fa-solid fa-download"></i>
+
+<h3>Download</h3>
+
+<p>
+
+Clients receive their original quality photos.
+
+</p>
 
 </div>
 
-</section> 
-<script src="js/app.js"></script>
+</section>
+<script src="js/main.js"></script>
+
 </body>
 
 </html>

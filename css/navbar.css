@@ -1,0 +1,165 @@
+/* ===========================================
+   NAVBAR
+=========================================== */
+
+header{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    z-index:999;
+
+}
+
+.navbar{
+
+    width:min(92%,1350px);
+
+    margin:20px auto;
+
+    height:80px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 35px;
+
+    border-radius:25px;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.logo i{
+
+    color:var(--color-primary);
+
+    font-size:32px;
+
+}
+
+.logo h2{
+
+    font-family:"Sora",sans-serif;
+
+    font-size:28px;
+
+    letter-spacing:-1px;
+
+}
+
+.nav-links{
+
+    display:flex;
+
+    gap:38px;
+
+}
+
+.nav-links a{
+
+    color:var(--color-text-secondary);
+
+    transition:.35s;
+
+    position:relative;
+
+    font-weight:500;
+
+}
+
+.nav-links a:hover{
+
+    color:white;
+
+}
+
+.nav-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-8px;
+
+    width:0;
+
+    height:2px;
+
+    background:var(--color-primary);
+
+    transition:.35s;
+
+}
+
+.nav-links a:hover::after{
+
+    width:100%;
+
+}
+
+.nav-buttons{
+
+    display:flex;
+
+    gap:18px;
+
+}
+
+.login{
+
+    color:white;
+
+    padding:12px 24px;
+
+}
+
+.register{
+
+    background:linear-gradient(135deg,#F5D76E,#D4AF37);
+
+    color:#111;
+
+    padding:14px 28px;
+
+    border-radius:999px;
+
+    font-weight:700;
+
+    transition:.35s;
+
+}
+
+.register:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 15px 35px rgba(212,175,55,.35);
+
+}

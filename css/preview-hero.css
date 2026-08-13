@@ -1,0 +1,51 @@
+:root{
+  --bg:#071226;
+  --panel:rgba(15,23,42,.7);
+  --accent:#D4AF37;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family: 'Sora', system-ui, sans-serif;background:linear-gradient(180deg,#041226 0%, #071226 100%);color:#fff;}
+.preview-hero{min-height:100vh;display:flex;align-items:center;justify-content:space-between;padding:80px;gap:40px;max-width:1300px;margin:0 auto}
+.preview-left{flex:1}
+.preview-left h1{font-size:84px;margin:0;line-height:0.92}
+.preview-left span{color:var(--accent)}
+.preview-right{flex:1;display:flex;justify-content:flex-end;align-items:center}
+.image-wrap{position:relative;max-width:560px;width:100%;border-radius:28px;overflow:hidden;box-shadow:0 20px 60px rgba(2,6,23,0.6)}
+.image-wrap img{display:block;width:100%;height:auto;object-fit:cover}
+
+/* TOP-RIGHT ROUNDED OVERLAY EFFECT */
+.image-wrap::before{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:46%;
+  height:34%;
+  background:linear-gradient(180deg, rgba(6,10,20,0.55), rgba(6,10,20,0.25));
+  border-bottom-left-radius:60px; /* creates the rounded 'swipe' into the image */
+  pointer-events:none;
+}
+
+/* subtle gold accent bubble at extreme corner */
+.image-wrap::after{
+  content:"";
+  position:absolute;
+  top:-28px;
+  right:-28px;
+  width:96px;
+  height:96px;
+  background:var(--accent);
+  border-radius:50%;
+  opacity:.14;
+  filter:blur(18px);
+  pointer-events:none;
+}
+
+/* small responsive tweaks */
+@media (max-width:900px){
+  .preview-hero{flex-direction:column;text-align:center;padding:40px}
+  .preview-left{order:1}
+  .preview-right{order:2;justify-content:center;margin-top:20px}
+  .preview-left h1{font-size:44px}
+  .image-wrap{max-width:420px}
+}

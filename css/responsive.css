@@ -1,43 +1,75 @@
-@media(max-width:1000px){
+/* Responsive adjustments for the hero and header */
+@media (max-width: 1000px) {
 
-.hero{
+	.hero{
+		flex-direction:column;
+		text-align:center;
+		padding-top:60px; /* reduce top spacing on smaller screens */
+		gap:40px;
+		align-items:center;
+	}
 
-flex-direction:column;
+	.hero-left,
+	.hero-right{
+		width:100%;
+	}
 
-text-align:center;
+	.hero-right{
+		display:flex;
+		justify-content:center;
+		align-items:center;
+	}
+
+	.hero-image{
+		width:100%;
+		max-width:420px; /* cap image width on medium screens */
+		margin-top:20px;
+	}
+
+	.hero h1{
+		font-size:48px;
+		line-height:1.05;
+	}
+
+	.hero p{
+		font-size:18px;
+		margin:0 auto 30px;
+	}
+
+	.nav-links{
+		display:none;
+	}
+
+	.nav-buttons{
+		display:flex;
+		gap:12px;
+	}
 
 }
 
-.hero-content{
+@media (max-width: 600px) {
 
-width:100%;
+	.hero{
+		padding-top:40px;
+		gap:24px;
+	}
 
-}
+	.hero h1{
+		font-size:36px;
+	}
 
-.hero-image{
+	.hero p{
+		font-size:16px;
+		max-width:95%;
+	}
 
-width:100%;
+	.hero-image{
+		max-width:320px;
+	}
 
-margin-top:60px;
-
-}
-
-.hero-content h1{
-
-font-size:48px;
-
-}
-
-.nav-links{
-
-display:none;
-
-}
-
-.buttons{
-
-display:none;
-
-}
+	.badge{
+		padding:8px 16px;
+		font-size:14px;
+	}
 
 }
