@@ -7,14 +7,11 @@
 
     <title>Profile | ShotMarket</title>
 
-    <!-- Main styles -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/responsive.css">
-
-    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -22,11 +19,6 @@
 </head>
 
 <body>
-
-<!-- =====================================================
-     NAVBAR
-===================================================== -->
-
 <header class="profile-header">
 
     <nav class="profile-navbar">
@@ -40,29 +32,23 @@
         </a>
 
         <div class="profile-nav-links">
-
             <a href="dashboard.html">
                 <i class="fa-solid fa-chart-line"></i>
                 Dashboard
             </a>
-
             <a href="gallery.html">
                 <i class="fa-regular fa-images"></i>
                 Galleries
             </a>
-
             <a href="upload.html">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 Upload
             </a>
-
             <a href="profile.html" class="active">
                 <i class="fa-solid fa-user"></i>
                 Profile
             </a>
-
         </div>
-
         <a href="index.html" class="back-home">
             <i class="fa-solid fa-arrow-left"></i>
             Home
@@ -72,16 +58,9 @@
 
 </header>
 
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main class="profile-page">
 
-    <!-- Page heading -->
-
-    <section class="profile-heading">
+       <section class="profile-heading">
 
         <div>
 
@@ -101,18 +80,7 @@
 
     </section>
 
-
-    <!-- =================================================
-         PROFILE GRID
-    ================================================== -->
-
     <section class="profile-grid">
-
-
-        <!-- =============================================
-             LEFT — PROFILE CARD
-        ============================================== -->
-
         <div class="profile-card profile-main-card">
 
             <div class="profile-cover"></div>
@@ -194,13 +162,6 @@
             </div>
 
         </div>
-
-
-
-        <!-- =============================================
-             RIGHT — EDIT PROFILE
-        ============================================== -->
-
         <div class="profile-card edit-profile-card">
 
             <div class="card-heading">
@@ -223,9 +184,6 @@
 
 
             <form id="profileForm">
-
-
-                <!-- Name -->
 
                 <div class="form-row">
 
@@ -250,10 +208,6 @@
                         </div>
 
                     </div>
-
-
-                    <!-- Professional Title -->
-
                     <div class="form-group">
 
                         <label for="professionalTitle">
@@ -277,9 +231,6 @@
 
                 </div>
 
-
-                <!-- Email -->
-
                 <div class="form-group">
 
                     <label for="email">
@@ -301,9 +252,6 @@
 
                 </div>
 
-
-                <!-- Phone -->
-
                 <div class="form-group">
 
                     <label for="phone">
@@ -323,10 +271,6 @@
                     </div>
 
                 </div>
-
-
-                <!-- Location -->
-
                 <div class="form-group">
 
                     <label for="location">
@@ -347,10 +291,6 @@
                     </div>
 
                 </div>
-
-
-                <!-- Bio -->
-
                 <div class="form-group">
 
                     <label for="bio">
@@ -364,9 +304,6 @@
                     >Professional photographer specializing in events, portraits and memorable moments.</textarea>
 
                 </div>
-
-
-                <!-- Website -->
 
                 <div class="form-group">
 
@@ -387,10 +324,6 @@
                     </div>
 
                 </div>
-
-
-                <!-- Social Media -->
-
                 <div class="social-section">
 
                     <h3>
@@ -444,9 +377,6 @@
 
                 </div>
 
-
-                <!-- Save -->
-
                 <div class="form-actions">
 
                     <button
@@ -475,13 +405,6 @@
         </div>
 
     </section>
-
-
-
-    <!-- =================================================
-         PAYMENT INFORMATION
-    ================================================== -->
-
     <section class="payment-settings-card">
 
         <div class="payment-settings-heading">
@@ -655,11 +578,6 @@
 
     </section>
 
-
-    <!-- =================================================
-         ACCOUNT SETTINGS
-    ================================================== -->
-
     <section class="account-settings">
 
         <div class="settings-card">
@@ -669,17 +587,13 @@
             </div>
 
             <div>
-
                 <h3>
                     Account Security
                 </h3>
-
                 <p>
                     Manage your password and account security settings.
                 </p>
-
             </div>
-
             <button
                 type="button"
                 class="secondary-btn"
@@ -687,10 +601,7 @@
             >
                 Change Password
             </button>
-
         </div>
-
-
         <div class="settings-card">
 
             <div class="settings-icon">
@@ -698,39 +609,24 @@
             </div>
 
             <div>
-
                 <h3>
                     Notifications
                 </h3>
-
                 <p>
                     Receive notifications about albums, payments and customers.
                 </p>
-
             </div>
-
             <label class="toggle">
-
                 <input
                     type="checkbox"
                     id="notificationToggle"
                     checked
                 >
-
                 <span class="toggle-slider"></span>
-
             </label>
-
         </div>
-
     </section>
-
-
 </main>
-
-
-<!-- Toast -->
-
 <div
     class="profile-toast"
     id="profileToast"

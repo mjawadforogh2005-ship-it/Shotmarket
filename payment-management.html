@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Payment Management | ShotMarket</title>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+
+        body {
+            background: #08111f;
+            color: #ffffff;
+        }
+
+        .payment-management {
+            padding: 80px 20px;
+            min-height: 100vh;
+        }
+
+        .management-header {
+            margin-bottom: 40px;
+        }
+
+        .management-header span {
+            color: #f0c83d;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .management-header h1 {
+            margin: 10px 0;
+            font-size: 42px;
+        }
+
+        .management-header p {
+            color: #94a3b8;
+        }
+
+        .payments-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .payment-item {
+            background: #101b2c;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .payment-info h3 {
+            margin: 0 0 8px;
+        }
+
+        .payment-info p {
+            margin: 5px 0;
+            color: #94a3b8;
+        }
+
+        .payment-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .payment-meta span {
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.06);
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status.pending {
+            background: rgba(240,200,61,0.15);
+            color: #f0c83d;
+        }
+
+        .status.paid {
+            background: rgba(34,197,94,0.15);
+            color: #4ade80;
+        }
+
+        .status.rejected {
+            background: rgba(239,68,68,0.15);
+            color: #f87171;
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .confirm-btn,
+        .reject-btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .confirm-btn {
+            background: #f0c83d;
+            color: #08111f;
+        }
+
+        .reject-btn {
+            background: #2a1720;
+            color: #f87171;
+        }
+
+        .confirm-btn:disabled,
+        .reject-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .empty-payments {
+            text-align: center;
+            padding: 60px;
+            background: #101b2c;
+            border-radius: 18px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 700px) {
+
+            .payment-item {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-actions {
+                flex-direction: column;
+            }
+
+            .management-header h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <nav class="navbar container">
+
+        <a href="index.html" class="brand">
+
+            <span class="brand-icon">
+                <i class="fa-solid fa-camera"></i>
+            </span>
+
+            <span>ShotMarket</span>
+
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="upload.html">Upload</a>
+            </li>
+
+            <li>
+                <a href="gallery.html">Gallery</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+
+<main class="payment-management container">
+
+    <section class="management-header">
+
+        <span>
+            PHOTOGRAPHER DASHBOARD
+        </span>
+
+        <h1>
+            Payment Requests
+        </h1>
+
+        <p>
+            Review customer payments and confirm completed transfers.
+        </p>
+
+    </section>
+
+
+    <section id="paymentsList" class="payments-list">
+
+        <div class="empty-payments">
+            Loading payment requests...
+        </div>
+
+    </section>
+
+</main>
+
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js">
+</script>
+
+<script type="module" src="js/payment-management.js"></script>             
+
+</body>
+
+</html>

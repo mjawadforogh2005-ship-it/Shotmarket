@@ -1,71 +1,554 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("ShotMarket Interactive Engine Loaded 🚀");
+/* =========================================================
+   SHOTMARKET - MAIN INTERACTIVE ENGINE
+   Authentication + General UI
+   ========================================================= */
 
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    anchorLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const targetId = link.getAttribute('href');
+        console.log(
+            "ShotMarket Interactive Engine Loaded 🚀"
+        );
 
-            if (targetId === '#') return;
 
-            const targetElement = document.querySelector(targetId);
+        /* =====================================================
+           PASSWORD VISIBILITY TOGGLE
+        ===================================================== */
 
-            if (targetElement) {
-                e.preventDefault();
+        function setupPasswordToggle(
+            inputId,
+            buttonId
+        ) {
 
-                const navLinks = document.querySelector('.nav-links');
-                if (navLinks) navLinks.classList.remove('active');
+            const input =
+                document.getElementById(inputId);
 
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const button =
+                document.getElementById(buttonId);
+
+
+            if (!input || !button) {
+                return;
             }
-        });
-    });
 
-    const featureCards = document.querySelectorAll('.feature-card[data-feature-link]');
 
-    featureCards.forEach(card => {
-        const targetPage = card.getAttribute('data-feature-link');
-        if (!targetPage) return;
+            button.addEventListener(
+                "click",
+                function () {
 
-        card.style.cursor = 'pointer';
+                    const isPassword =
+                        input.type === "password";
 
-        const navigateToFeature = (event) => {
-            if (event) {
-                event.preventDefault();
+
+                    input.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    this.innerHTML =
+                        isPassword
+                            ? '<i class="fa-regular fa-eye-slash"></i>'
+                            : '<i class="fa-regular fa-eye"></i>';
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           REGISTER PASSWORD TOGGLES
+        ===================================================== */
+
+        setupPasswordToggle(
+            "registerPassword",
+            "toggleRegisterPassword"
+        );
+
+
+        setupPasswordToggle(
+            "confirmPassword",
+            "toggleConfirmPassword"
+        );
+
+
+        /* =====================================================
+           LOGIN PASSWORD TOGGLE
+        ===================================================== */
+
+        setupPasswordToggle(
+            "loginPassword",
+            "toggleLoginPassword"
+        );
+
+
+
+        /* =====================================================
+           REGISTER FORM
+        ===================================================== */
+
+        const registerForm =
+            document.getElementById(
+                "registerForm"
+            );
+
+
+        if (registerForm) {
+
+            registerForm.addEventListener(
+                "submit",
+                async function (e) {
+
+                    e.preventDefault();
+
+
+                    const fullName =
+                        document
+                            .getElementById(
+                                "fullName"
+                            )
+                            ?.value
+                            .trim();
+
+
+                    const email =
+                        document
+                            .getElementById(
+                                "registerEmail"
+                            )
+                            ?.value
+                            .trim();
+
+
+                    const password =
+                        document
+                            .getElementById(
+                                "registerPassword"
+                            )
+                            ?.value;
+
+
+                    const confirmPassword =
+                        document
+                            .getElementById(
+                                "confirmPassword"
+                            )
+                            ?.value;
+
+
+                    const submitBtn =
+                        registerForm.querySelector(
+                            ".auth-submit"
+                        );
+
+
+
+                    /* =========================================
+                       VALIDATION
+                    ========================================= */
+
+                    if (!fullName) {
+
+                        alert(
+                            "Please enter your full name."
+                        );
+
+                        return;
+                    }
+
+
+                    if (!email) {
+
+                        alert(
+                            "Please enter your email."
+                        );
+
+                        return;
+                    }
+
+
+                    if (!password) {
+
+                        alert(
+                            "Please enter a password."
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        password !==
+                        confirmPassword
+                    ) {
+
+                        alert(
+                            "Passwords do not match."
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        password.length < 8
+                    ) {
+
+                        alert(
+                            "Password must be at least 8 characters long."
+                        );
+
+                        return;
+                    }
+
+
+
+                    /* =========================================
+                       BUTTON LOADING
+                    ========================================= */
+
+                    if (submitBtn) {
+
+                        submitBtn.disabled =
+                            true;
+
+                        submitBtn.innerHTML =
+                            'Creating Account... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+                    }
+
+
+
+                    try {
+
+
+                        /* =====================================
+                           SUPABASE REGISTRATION
+                        ===================================== */
+
+                        const {
+                            data,
+                            error
+                        } =
+                            await registerUser(
+                                fullName,
+                                email,
+                                password
+                            );
+
+
+                        if (error || !data) {
+
+                            throw new Error(
+                                error ||
+                                "Registration failed."
+                            );
+
+                        }
+
+
+
+                        console.log(
+                            "Registration response:",
+                            data
+                        );
+
+
+
+                        /* =====================================
+                           EMAIL CONFIRMATION REQUIRED
+                        ===================================== */
+
+                        if (
+                            data.user &&
+                            !data.session
+                        ) {
+
+                            alert(
+                                "Account created successfully! Please check your email and confirm your account before logging in."
+                            );
+
+
+                            window.location.href =
+                                "login.html";
+
+
+                            return;
+
+                        }
+
+
+
+                        /* =====================================
+                           SESSION CREATED IMMEDIATELY
+                        ===================================== */
+
+                        if (
+                            data.user &&
+                            data.session
+                        ) {
+
+                            alert(
+                                "Account created successfully!"
+                            );
+
+
+                            window.location.href =
+                                "dashboard.html";
+
+
+                            return;
+
+                        }
+
+
+
+                        throw new Error(
+                            "Account creation returned an unexpected response."
+                        );
+
+
+                    } catch (err) {
+
+                        console.error(
+                            "Registration error:",
+                            err
+                        );
+
+
+                        alert(
+                            "Registration failed: " +
+                            err.message
+                        );
+
+
+                    } finally {
+
+                        if (submitBtn) {
+
+                            submitBtn.disabled =
+                                false;
+
+                            submitBtn.innerHTML =
+                                'Create Account <i class="fa-solid fa-arrow-right"></i>';
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================================
+           LOGIN FORM
+        ===================================================== */
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        if (loginForm) {
+
+            loginForm.addEventListener(
+                "submit",
+                async function (e) {
+
+                    e.preventDefault();
+
+
+                    const email =
+                        document
+                            .getElementById(
+                                "loginEmail"
+                            )
+                            ?.value
+                            .trim();
+
+
+                    const password =
+                        document
+                            .getElementById(
+                                "loginPassword"
+                            )
+                            ?.value;
+
+
+                    const submitBtn =
+                        loginForm.querySelector(
+                            ".auth-submit"
+                        );
+
+
+
+                    /* =========================================
+                       VALIDATION
+                    ========================================= */
+
+                    if (!email) {
+
+                        alert(
+                            "Please enter your email."
+                        );
+
+                        return;
+                    }
+
+
+                    if (!password) {
+
+                        alert(
+                            "Please enter your password."
+                        );
+
+                        return;
+                    }
+
+
+
+                    /* =========================================
+                       BUTTON LOADING
+                    ========================================= */
+
+                    if (submitBtn) {
+
+                        submitBtn.disabled =
+                            true;
+
+                        submitBtn.innerHTML =
+                            'Signing In... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+                    }
+
+
+
+                    try {
+
+
+                        /* =====================================
+                           SUPABASE LOGIN
+                        ===================================== */
+
+                        const {
+                            data,
+                            error
+                        } =
+                            await loginUser(
+                                email,
+                                password
+                            );
+
+
+                        if (error) {
+
+                            throw new Error(
+                                error
+                            );
+
+                        }
+
+
+                        if (
+                            !data ||
+                            !data.user
+                        ) {
+
+                            throw new Error(
+                                "Login succeeded but no user was returned."
+                            );
+
+                        }
+
+
+
+                        console.log(
+                            "Login successful:",
+                            data.user
+                        );
+
+
+
+                        /* =====================================
+                           GO TO DASHBOARD
+                        ===================================== */
+
+                        window.location.href =
+                            "dashboard.html";
+
+
+                    } catch (err) {
+
+                        console.error(
+                            "Login error:",
+                            err
+                        );
+
+
+                        alert(
+                            "Login failed: " +
+                            err.message
+                        );
+
+
+                    } finally {
+
+                        if (submitBtn) {
+
+                            submitBtn.disabled =
+                                false;
+
+                            submitBtn.innerHTML =
+                                'Login <i class="fa-solid fa-arrow-right"></i>';
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================================
+           LOGOUT BUTTONS
+        ===================================================== */
+
+        const logoutButtons =
+            document.querySelectorAll(
+                "[data-logout]"
+            );
+
+
+        logoutButtons.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function (e) {
+
+                        e.preventDefault();
+
+                        await logoutUser();
+
+                    }
+                );
+
             }
-            window.location.href = targetPage;
-        };
+        );
 
-        card.addEventListener('click', navigateToFeature);
-        card.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                navigateToFeature();
-            }
-        });
-    });
 
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navLinks = document.querySelector('.nav-links');
+        console.log(
+            "ShotMarket authentication handlers ready."
+        );
 
-    if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
     }
-
-    const demoBtn = document.querySelector('.secondary-btn');
-    if (demoBtn && demoBtn.textContent.includes('Live Demo')) {
-        demoBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const gallerySection = document.querySelector('#gallery');
-            if (gallerySection) {
-                gallerySection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
-});
+);

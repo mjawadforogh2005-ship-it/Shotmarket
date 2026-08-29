@@ -1,29 +1,29 @@
 /* =========================================================
    SHOTMARKET
    PAYMENT MODULE
-   Frontend demonstration
-   ========================================================= */
+   Supabase Connected Version
+========================================================= */
+
+import { supabase } from "./supabaseClient.js";
 
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
-
+    async function () {
 
         console.log(
-            "ShotMarket Payment Module Loaded"
+            "ShotMarket Supabase Payment Module Loaded 🚀"
         );
 
 
         /* =====================================================
-           GET ALBUM ID FROM URL
+           GET ALBUM ID
         ===================================================== */
 
         const params =
             new URLSearchParams(
                 window.location.search
             );
-
 
         const albumId =
             params.get("album");
@@ -35,9 +35,9 @@ document.addEventListener(
         );
 
 
-        /* =====================================================
-           GET ALBUM
-        ===================================================== */
+        /*
+         * If there is no album ID, stop.
+         */
 
         if (!albumId) {
 
@@ -46,29 +46,248 @@ document.addEventListener(
             );
 
             return;
-
         }
 
 
-        const album =
-            getAlbumById(albumId);
+        /* =====================================================
+           GET SELECTED PHOTOS
+        ===================================================== */
 
-
-        if (!album) {
-
-            showError(
-                "This album could not be found."
+        const selectedPhotosJSON =
+            sessionStorage.getItem(
+                "shotmarket_selected_photos"
             );
 
-            return;
 
+        let selectedPhotoIds = [];
+
+
+        try {
+
+            if (selectedPhotosJSON) {
+
+                selectedPhotoIds =
+                    JSON.parse(
+                        selectedPhotosJSON
+                    );
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Could not read selected photos:",
+                error
+            );
+
+            selectedPhotoIds = [];
         }
 
 
         console.log(
-            "Payment album:",
-            album
+            "Selected photo IDs:",
+            selectedPhotoIds
         );
+
+
+        /* =====================================================
+           CHECK USER
+        ===================================================== */
+
+        const {
+            data: userData,
+            error: userError
+        } =
+            await supabase.auth.getUser();
+
+
+        if (userError) {
+
+            console.error(
+                "Could not get current user:",
+                userError
+            );
+        }
+
+
+        const currentUser =
+            userData?.user || null;
+
+
+        console.log(
+            "Current user:",
+            currentUser
+        );
+
+
+        /*
+         * Payment creation is protected by RLS.
+         * Therefore the customer must be logged in.
+         */
+
+        if (!currentUser) {
+
+            alert(
+                "Please log in before continuing to payment."
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        /* =====================================================
+           LOAD ALBUM
+        ===================================================== */
+
+        let album = null;
+
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabase
+                    .from("albums")
+                    .select("*")
+                    .eq(
+                        "id",
+                        albumId
+                    )
+                    .maybeSingle();
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            if (!data) {
+
+                showError(
+                    "This album could not be found."
+                );
+
+                return;
+            }
+
+
+            album = data;
+
+
+            console.log(
+                "Supabase album:",
+                album
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Album loading error:",
+                error
+            );
+
+            showError(
+                "Could not load this album."
+            );
+
+            return;
+        }
+
+
+        /* =====================================================
+           LOAD SELECTED PHOTOS
+        ===================================================== */
+
+        let photos = [];
+
+
+        try {
+
+            if (
+                selectedPhotoIds &&
+                selectedPhotoIds.length > 0
+            ) {
+
+                /*
+                 * Customer selected specific photos.
+                 */
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabase
+                        .from("photos")
+                        .select("*")
+                        .in(
+                            "id",
+                            selectedPhotoIds
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                photos =
+                    data || [];
+
+
+            } else {
+
+                /*
+                 * If nothing was selected,
+                 * load all photos from the album.
+                 */
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabase
+                        .from("photos")
+                        .select("*")
+                        .eq(
+                            "album_id",
+                            albumId
+                        );
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                photos =
+                    data || [];
+            }
+
+
+            console.log(
+                "Payment photos:",
+                photos
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Photo loading error:",
+                error
+            );
+
+            showError(
+                "Could not load the selected photos."
+            );
+
+            return;
+        }
 
 
         /* =====================================================
@@ -90,50 +309,137 @@ document.addEventListener(
         if (albumName) {
 
             albumName.textContent =
-                album.name;
-
+                album.name ||
+                "Untitled Album";
         }
 
 
         if (albumDetails) {
 
             const photoCount =
-                album.photos
-                    ? album.photos.length
-                    : 0;
+                photos.length;
 
 
-            const date =
-                album.date
-                    ? formatDate(album.date)
+            const eventDate =
+                album.event_date
+                    ? formatDate(
+                        album.event_date
+                    )
                     : "Event date unavailable";
 
 
             albumDetails.textContent =
-                `${date} • ${photoCount} photos`;
-
+                `${eventDate} • ${photoCount} photo${
+                    photoCount === 1
+                        ? ""
+                        : "s"
+                }`;
         }
 
 
-
         /* =====================================================
-           PAYMENT INFORMATION
+           CALCULATE TOTAL
         ===================================================== */
 
-        const payment =
-            album.payment || {};
+        let totalAmount = 0;
 
 
-        const amount =
+        photos.forEach(
+            function (photo) {
+
+                totalAmount +=
+                    Number(
+                        photo.price || 0
+                    );
+            }
+        );
+
+
+        /*
+         * Temporary fallback price.
+         *
+         * If your photos currently have price = 0,
+         * we use 1,000 KZT per photo for testing.
+         *
+         * Later we can create proper pricing settings.
+         */
+
+        if (
+            totalAmount === 0 &&
+            photos.length > 0
+        ) {
+
+            totalAmount =
+                photos.length * 1000;
+        }
+
+
+        console.log(
+            "Total payment:",
+            totalAmount
+        );
+
+
+        /* =====================================================
+           DISPLAY PAYMENT AMOUNT
+        ===================================================== */
+
+        const paymentAmount =
             document.getElementById(
                 "paymentAmount"
             );
 
 
-        const currency =
+        const paymentCurrency =
             document.getElementById(
                 "paymentCurrency"
             );
+
+
+        if (paymentAmount) {
+
+            paymentAmount.textContent =
+                formatNumber(
+                    totalAmount
+                );
+        }
+
+
+        if (paymentCurrency) {
+
+            paymentCurrency.textContent =
+                "KZT";
+        }
+
+
+        /* =====================================================
+           BANK INFORMATION
+        ===================================================== */
+
+        /*
+         * Your current profiles table does not contain
+         * bank/account columns.
+         *
+         * Therefore these are temporary testing values.
+         *
+         * We will move these into a photographer payment
+         * settings table later.
+         */
+
+        const bankInformation = {
+
+            bankName:
+                "Kaspi Bank",
+
+            accountName:
+                "ShotMarket Photographer",
+
+            accountNumber:
+                "000000000000",
+
+            iban:
+                "KZ00 0000 0000 0000 0000"
+        };
 
 
         const bankName =
@@ -160,60 +466,32 @@ document.addEventListener(
             );
 
 
-        if (amount) {
-
-            amount.textContent =
-                formatNumber(
-                    payment.amount || 0
-                );
-
-        }
-
-
-        if (currency) {
-
-            currency.textContent =
-                payment.currency ||
-                "KZT";
-
-        }
-
-
         if (bankName) {
 
             bankName.textContent =
-                payment.bankName ||
-                "Not provided";
-
+                bankInformation.bankName;
         }
 
 
         if (accountName) {
 
             accountName.textContent =
-                payment.accountName ||
-                "Not provided";
-
+                bankInformation.accountName;
         }
 
 
         if (accountNumber) {
 
             accountNumber.textContent =
-                payment.accountNumber ||
-                "Not provided";
-
+                bankInformation.accountNumber;
         }
 
 
         if (iban) {
 
             iban.textContent =
-                payment.iban ||
-                "Not provided";
-
+                bankInformation.iban;
         }
-
 
 
         /* =====================================================
@@ -233,15 +511,13 @@ document.addEventListener(
                 function () {
 
                     copyText(
-                        payment.accountNumber,
+                        bankInformation.accountNumber,
                         copyAccount
                     );
 
                 }
             );
-
         }
-
 
 
         /* =====================================================
@@ -261,15 +537,13 @@ document.addEventListener(
                 function () {
 
                     copyText(
-                        payment.iban,
+                        bankInformation.iban,
                         copyIban
                     );
 
                 }
             );
-
         }
-
 
 
         /* =====================================================
@@ -286,46 +560,157 @@ document.addEventListener(
 
             confirmPayment.addEventListener(
                 "click",
-                function () {
+                async function () {
+
+                    /*
+                     * Prevent double clicking.
+                     */
 
                     confirmPayment.disabled =
                         true;
 
 
                     confirmPayment.innerHTML = `
-
                         <i class="fa-solid fa-spinner fa-spin"></i>
-
-                        Confirming...
-
+                        Recording Payment...
                     `;
 
 
-                    /*
-                       This is a frontend DEMO.
-                       No real bank transaction is
-                       being verified.
-                    */
+                    try {
 
-                    setTimeout(
-                        function () {
+                        /* -------------------------------------
+                           CREATE PAYMENT RECORD
+                        ------------------------------------- */
 
-                            markPaymentCompleted(
-                                albumId
-                            );
+                        const paymentRecord = {
+
+                            user_id:
+                                currentUser.id,
+
+                            album_id:
+                                albumId,
+
+                            amount:
+                                totalAmount,
+
+                            currency:
+                                "KZT",
+
+                            status:
+                                "pending",
+
+                            payment_method:
+                                "bank_transfer",
+
+                            selected_photos:
+                                selectedPhotoIds,
+
+                            created_at:
+                                new Date().toISOString(),
+
+                            updated_at:
+                                new Date().toISOString()
+                        };
 
 
-                            showSuccessModal();
+                        console.log(
+                            "Creating payment:",
+                            paymentRecord
+                        );
 
-                        },
-                        900
-                    );
+
+                        const {
+                            data: payment,
+                            error: paymentError
+                        } =
+                            await supabase
+                                .from("payments")
+                                .insert(
+                                    paymentRecord
+                                )
+                                .select()
+                                .single();
+
+
+                        if (paymentError) {
+
+                            throw paymentError;
+                        }
+
+
+                        console.log(
+                            "Payment successfully created:",
+                            payment
+                        );
+
+
+                        /* -------------------------------------
+                           SAVE PAYMENT ID
+                        ------------------------------------- */
+
+                        sessionStorage.setItem(
+                            "shotmarket_payment_id",
+                            payment.id
+                        );
+
+
+                        sessionStorage.setItem(
+                            "shotmarket_current_album",
+                            albumId
+                        );
+
+
+                        sessionStorage.setItem(
+                            "shotmarket_selected_photos",
+                            JSON.stringify(
+                                selectedPhotoIds
+                            )
+                        );
+
+
+                        sessionStorage.setItem(
+                            "shotmarket_payment_status",
+                            "pending"
+                        );
+
+
+                        /* -------------------------------------
+                           SHOW SUCCESS
+                        ------------------------------------- */
+
+                        showSuccessModal();
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Payment creation failed:",
+                            error
+                        );
+
+
+                        alert(
+                            "Payment could not be recorded.\n\n" +
+                            error.message
+                        );
+
+
+                        confirmPayment.disabled =
+                            false;
+
+
+                        confirmPayment.innerHTML = `
+                            <span>
+                                I Have Made the Payment
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+                        `;
+                    }
 
                 }
             );
-
         }
-
 
 
         /* =====================================================
@@ -352,81 +737,16 @@ document.addEventListener(
 
                 }
             );
-
         }
+
 
     }
 );
 
 
-
-/* =========================================================
-   MARK PAYMENT COMPLETED
-   ========================================================= */
-
-function markPaymentCompleted(
-    albumId
-) {
-
-    const albums =
-        getAlbums();
-
-
-    const albumIndex =
-        albums.findIndex(
-            album =>
-                album.id === albumId
-        );
-
-
-    if (albumIndex === -1) {
-
-        console.error(
-            "Album not found."
-        );
-
-        return false;
-
-    }
-
-
-    albums[albumIndex]
-        .paymentCompleted = true;
-
-
-    albums[albumIndex]
-        .paymentCompletedAt =
-        new Date().toISOString();
-
-
-    saveAlbums(albums);
-
-
-    /*
-       Also remember the current paid album.
-    */
-
-    localStorage.setItem(
-        "shotmarket_paid_album",
-        albumId
-    );
-
-
-    console.log(
-        "Payment completed:",
-        albumId
-    );
-
-
-    return true;
-
-}
-
-
-
 /* =========================================================
    SUCCESS MODAL
-   ========================================================= */
+========================================================= */
 
 function showSuccessModal() {
 
@@ -441,16 +761,44 @@ function showSuccessModal() {
         modal.classList.add(
             "show"
         );
-
     }
-
 }
 
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(message) {
+
+    console.error(
+        "Payment error:",
+        message
+    );
+
+
+    const albumName =
+        document.getElementById(
+            "albumName"
+        );
+
+
+    if (albumName) {
+
+        albumName.textContent =
+            "Payment Error";
+    }
+
+
+    alert(
+        message
+    );
+}
 
 
 /* =========================================================
    COPY TEXT
-   ========================================================= */
+========================================================= */
 
 async function copyText(
     text,
@@ -458,9 +806,7 @@ async function copyText(
 ) {
 
     if (!text) {
-
         return;
-
     }
 
 
@@ -476,11 +822,8 @@ async function copyText(
 
 
         button.innerHTML = `
-
             <i class="fa-solid fa-check"></i>
-
             Copied
-
         `;
 
 
@@ -502,19 +845,17 @@ async function copyText(
             error
         );
 
+
         alert(
-            "Could not copy automatically. Please copy the information manually."
+            "Could not copy automatically. Please copy it manually."
         );
-
     }
-
 }
-
 
 
 /* =========================================================
    FORMAT NUMBER
-   ========================================================= */
+========================================================= */
 
 function formatNumber(
     number
@@ -525,14 +866,12 @@ function formatNumber(
     ).toLocaleString(
         "en-US"
     );
-
 }
-
 
 
 /* =========================================================
    FORMAT DATE
-   ========================================================= */
+========================================================= */
 
 function formatDate(
     dateString
@@ -551,7 +890,6 @@ function formatDate(
     ) {
 
         return dateString;
-
     }
 
 
@@ -563,105 +901,4 @@ function formatDate(
             day: "numeric"
         }
     );
-
-}
-
-
-
-/* =========================================================
-   ERROR
-   ========================================================= */
-
-function showError(
-    message
-) {
-
-    document.body.innerHTML = `
-
-        <main
-            style="
-                min-height:100vh;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                padding:30px;
-                text-align:center;
-                font-family:Arial,sans-serif;
-                background:#0b1320;
-                color:white;
-            "
-        >
-
-            <div>
-
-                <div
-                    style="
-                        font-size:50px;
-                        margin-bottom:20px;
-                    "
-                >
-                    ⚠️
-                </div>
-
-
-                <h1>
-                    Payment Unavailable
-                </h1>
-
-
-                <p
-                    style="
-                        color:#9aa8bb;
-                        margin:15px 0 25px;
-                    "
-                >
-                    ${escapePaymentHTML(message)}
-                </p>
-
-
-                <a
-                    href="gallery.html"
-                    style="
-                        display:inline-block;
-                        padding:12px 20px;
-                        border-radius:8px;
-                        background:#e8c547;
-                        color:#101927;
-                        text-decoration:none;
-                        font-weight:bold;
-                    "
-                >
-                    Return to Gallery
-                </a>
-
-            </div>
-
-        </main>
-
-    `;
-
-}
-
-
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapePaymentHTML(
-    text
-) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
 }

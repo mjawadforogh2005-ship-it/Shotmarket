@@ -1,55 +1,50 @@
-/* =========================================================
-   SHOTMARKET - UPLOAD / CREATE ALBUM
-   Frontend prototype using localStorage
-   ========================================================= */
+import {
+    createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient(
+    "https://xplcaiygifwnxyevvqsr.supabase.co",
+    "sb_publishable_16S4x_HPLxfsUk1RTgR4Qw_gnvlyqD_"
+);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("ShotMarket Upload System Loaded");
+    console.log("ShotMarket Supabase Upload System Loaded 🚀");
 
-    // ---------------------------------------------------------
-    // FIND FORM ELEMENTS
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const albumForm =
+        document.getElementById("albumForm");
 
     const albumNameInput =
-        document.getElementById("albumName") ||
-        document.querySelector('input[name="albumName"]');
+        document.getElementById("albumName");
 
     const eventDateInput =
-        document.getElementById("eventDate") ||
-        document.querySelector('input[name="eventDate"]');
+        document.getElementById("eventDate");
 
     const locationInput =
-        document.getElementById("location") ||
-        document.querySelector('input[name="location"]');
+        document.getElementById("location");
 
     const descriptionInput =
-        document.getElementById("description") ||
-        document.querySelector("textarea");
+        document.getElementById("description");
 
     const fileInput =
-        document.getElementById("photoInput") ||
-        document.querySelector('input[type="file"]');
+        document.getElementById("photoInput");
 
     const dropzone =
-        document.getElementById("dropzone") ||
-        document.querySelector(".dropzone");
+        document.getElementById("dropzone");
 
     const photoGrid =
-        document.getElementById("photoGrid") ||
-        document.querySelector(".photo-grid");
+        document.getElementById("photoGrid");
 
     const photoCountLabel =
         document.getElementById("photoCount");
 
-    const createButton =
-        document.getElementById("createAlbumBtn") ||
-        document.querySelector(".create-album-btn");
-
     const qrContainer =
-        document.getElementById("qrCode") ||
-        document.getElementById("qrcode") ||
-        document.querySelector(".qr-code");
+        document.getElementById("qrcode");
 
     const qrPlaceholder =
         document.getElementById("qrPlaceholder");
@@ -63,277 +58,719 @@ document.addEventListener("DOMContentLoaded", () => {
     const successMessage =
         document.getElementById("successMessage");
 
-    // ---------------------------------------------------------
-    // STORE SELECTED PHOTOS
-    // ---------------------------------------------------------
+    const createButton =
+        document.querySelector(".create-album-btn");
+
+
+    /* =====================================================
+       SELECTED PHOTOS
+    ===================================================== */
 
     let selectedPhotos = [];
 
-    // ---------------------------------------------------------
-    // FILE INPUT
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       GET CURRENT USER
+    ===================================================== */
+
+    async function getCurrentUser() {
+
+        const {
+            data,
+            error
+        } = await supabase.auth.getUser();
+
+        if (error) {
+
+            console.error(
+                "Could not get current user:",
+                error
+            );
+
+            return null;
+        }
+
+        return data.user;
+    }
+
+
+    /* =====================================================
+       HANDLE FILES
+    ===================================================== */
 
     async function handleFiles(files) {
 
-        const imageFiles = Array.from(files).filter(file =>
-            file.type.startsWith("image/")
-        );
+        const imageFiles =
+            Array.from(files).filter(file =>
+                file.type.startsWith("image/")
+            );
 
-        if (!imageFiles.length) return;
+        if (!imageFiles.length) {
+
+            alert(
+                "Please select JPG, PNG or WEBP images."
+            );
+
+            return;
+        }
+
 
         for (const file of imageFiles) {
 
-            const compressedImage =
-                await compressImage(file);
+            try {
 
-            selectedPhotos.push({
-                id: crypto.randomUUID(),
-                name: file.name,
-                data: compressedImage
-            });
+                const preview =
+                    await createPreview(file);
+
+                selectedPhotos.push({
+                    id: crypto.randomUUID(),
+                    file: file,
+                    name: file.name,
+                    preview: preview
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Could not process image:",
+                    error
+                );
+            }
         }
 
-        console.log(
-            `${selectedPhotos.length} photos selected`
-        );
 
         updatePhotoCount();
+
         displaySelectedPhotos();
     }
 
+
+    /* =====================================================
+       FILE INPUT
+    ===================================================== */
+
     if (fileInput) {
 
-        fileInput.addEventListener("change", async function () {
-            await handleFiles(this.files);
-        });
+        fileInput.addEventListener(
+            "change",
+            async function () {
+
+                await handleFiles(
+                    this.files
+                );
+
+                /*
+                    Allow selecting the same file again
+                    later if needed.
+                */
+
+                this.value = "";
+            }
+        );
     }
+
+
+    /* =====================================================
+       DRAG & DROP
+    ===================================================== */
 
     if (dropzone) {
 
-        dropzone.addEventListener("dragover", function (event) {
-            event.preventDefault();
-            dropzone.classList.add("dragover");
-        });
+        dropzone.addEventListener(
+            "dragover",
+            event => {
 
-        dropzone.addEventListener("dragleave", function () {
-            dropzone.classList.remove("dragover");
-        });
+                event.preventDefault();
 
-        dropzone.addEventListener("drop", async function (event) {
-            event.preventDefault();
-            dropzone.classList.remove("dragover");
-
-            if (event.dataTransfer?.files) {
-                await handleFiles(event.dataTransfer.files);
+                dropzone.classList.add(
+                    "dragover"
+                );
             }
-        });
+        );
 
-        dropzone.addEventListener("click", function () {
-            if (fileInput) {
-                fileInput.click();
+
+        dropzone.addEventListener(
+            "dragleave",
+            () => {
+
+                dropzone.classList.remove(
+                    "dragover"
+                );
             }
-        });
+        );
+
+
+        dropzone.addEventListener(
+            "drop",
+            async event => {
+
+                event.preventDefault();
+
+                dropzone.classList.remove(
+                    "dragover"
+                );
+
+                const files =
+                    event.dataTransfer.files;
+
+                if (files?.length) {
+
+                    await handleFiles(files);
+                }
+            }
+        );
+
+
+        /*
+            Clicking the dropzone opens
+            the file picker.
+
+            Do NOT trigger this when clicking
+            the Browse label itself.
+        */
+
+        dropzone.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target.closest(
+                        ".browse-btn"
+                    )
+                ) {
+                    return;
+                }
+
+                if (fileInput) {
+
+                    fileInput.click();
+                }
+            }
+        );
     }
 
-    // ---------------------------------------------------------
-    // UPDATE PHOTO COUNT
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       UPDATE PHOTO COUNT
+    ===================================================== */
 
     function updatePhotoCount() {
-        if (photoCountLabel) {
-            photoCountLabel.textContent =
-                `${selectedPhotos.length} photo${
-                    selectedPhotos.length === 1 ? "" : "s"
-                }`;
+
+        if (!photoCountLabel) {
+            return;
         }
+
+        const count =
+            selectedPhotos.length;
+
+        photoCountLabel.textContent =
+            `${count} photo${count === 1 ? "" : "s"}`;
     }
 
-    // ---------------------------------------------------------
-    // DISPLAY SELECTED PHOTOS
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       DISPLAY PHOTO PREVIEWS
+    ===================================================== */
 
     function displaySelectedPhotos() {
 
-        if (!photoGrid) return;
+        if (!photoGrid) {
+            return;
+        }
 
         photoGrid.innerHTML = "";
+
 
         selectedPhotos.forEach(photo => {
 
             const wrapper =
                 document.createElement("div");
 
-            wrapper.className = "photo-preview";
+            wrapper.className =
+                "photo-preview";
+
 
             wrapper.innerHTML = `
                 <img
-                    src="${photo.data}"
+                    src="${photo.preview}"
                     alt="${escapeHTML(photo.name)}"
                 >
             `;
+
 
             photoGrid.appendChild(wrapper);
         });
     }
 
-    // ---------------------------------------------------------
-    // CREATE ALBUM
-    // ---------------------------------------------------------
 
-    if (createButton) {
+    /* =====================================================
+       CREATE PREVIEW
+    ===================================================== */
 
-        createButton.addEventListener("click", async function (event) {
+    function createPreview(file) {
 
-            event.preventDefault();
+        return new Promise(
+            (resolve, reject) => {
 
-            const albumName =
-                albumNameInput?.value.trim() || "Untitled Album";
+                const reader =
+                    new FileReader();
 
-            const eventDate =
-                eventDateInput?.value || "";
 
-            const location =
-                locationInput?.value.trim() || "";
+                reader.onload =
+                    event => {
 
-            const description =
-                descriptionInput?.value.trim() || "";
+                        resolve(
+                            event.target.result
+                        );
+                    };
 
-            // Require at least one photo
-            if (selectedPhotos.length === 0) {
 
-                alert(
-                    "Please upload at least one photo before creating the album."
-                );
+                reader.onerror =
+                    reject;
 
-                return;
+
+                reader.readAsDataURL(file);
             }
-
-            // -------------------------------------------------
-            // CREATE UNIQUE ALBUM ID
-            // -------------------------------------------------
-
-            const albumId =
-                "album-" +
-                Date.now() +
-                "-" +
-                Math.random()
-                    .toString(36)
-                    .substring(2, 8);
-
-            // -------------------------------------------------
-            // ALBUM OBJECT
-            // -------------------------------------------------
-
-            const album = {
-
-                id: albumId,
-
-                name: albumName,
-
-                date: eventDate,
-
-                location: location,
-
-                description: description,
-
-                createdAt:
-                    new Date().toISOString(),
-
-                photographer: {
-                    name: "Mohammad",
-                    email: "photographer@shotmarket.com"
-                },
-
-                payment: {
-
-                    bankName:
-                        "Halyk Bank",
-
-                    accountName:
-                        "Mohammad Jawad Frogh",
-
-                    accountNumber:
-                        "KZ00 0000 0000 0000 0000",
-
-                    iban:
-                        "KZ00 0000 0000 0000 0000",
-
-                    amount:
-                        2500,
-
-                    currency:
-                        "KZT"
-                },
-
-                photos: selectedPhotos,
-
-                paymentCompleted: false
-
-            };
-
-// -------------------------------------------------
-// SAVE ALBUM
-// -------------------------------------------------
-
-const albums =
-    JSON.parse(
-        localStorage.getItem("shotmarket_albums")
-    ) || [];
-
-albums.push(album);
-
-localStorage.setItem(
-    "shotmarket_albums",
-    JSON.stringify(albums)
-);
-
-            // Save latest album
-            localStorage.setItem(
-                "shotmarket_current_album",
-                albumId
-            );
-
-            console.log(
-                "Album created:",
-                album
-            );
-
-            // -------------------------------------------------
-            // GENERATE QR CODE
-            // -------------------------------------------------
-
-            generateQRCode(albumId);
-
-            // -------------------------------------------------
-            // SUCCESS MESSAGE
-            // -------------------------------------------------
-
-            if (successMessage) {
-
-                successMessage.innerHTML = `
-                    <strong>✓ Album created successfully!</strong>
-                    <br>
-                    Your customers can scan the QR code
-                    to access this gallery.
-                `;
-
-                successMessage.style.display = "block";
-            }
-
-            // -------------------------------------------------
-            // ALERT
-            // -------------------------------------------------
-
-            alert(
-                "Album created successfully!"
-            );
-
-        });
+        );
     }
 
-    // ---------------------------------------------------------
-    // QR CODE
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       CREATE ALBUM
+    ===================================================== */
+
+    if (albumForm) {
+
+        albumForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                /*
+                    Prevent double clicks.
+                */
+
+                if (
+                    createButton?.disabled
+                ) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   VALIDATE USER
+                ----------------------------------------- */
+
+                const user =
+                    await getCurrentUser();
+
+
+                if (!user) {
+
+                    alert(
+                        "Please log in before creating an album."
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   GET FORM DATA
+                ----------------------------------------- */
+
+                const albumName =
+                    albumNameInput.value.trim();
+
+                const eventDate =
+                    eventDateInput.value;
+
+                const location =
+                    locationInput.value.trim();
+
+                const description =
+                    descriptionInput.value.trim();
+
+
+                const privacyElement =
+                    document.querySelector(
+                        'input[name="privacy"]:checked'
+                    );
+
+                const privacy =
+                    privacyElement
+                        ? privacyElement.value
+                        : "private";
+
+
+                /* -----------------------------------------
+                   VALIDATION
+                ----------------------------------------- */
+
+                if (!albumName) {
+
+                    alert(
+                        "Please enter an album name."
+                    );
+
+                    return;
+                }
+
+
+                if (!eventDate) {
+
+                    alert(
+                        "Please select the event date."
+                    );
+
+                    return;
+                }
+
+
+                if (!location) {
+
+                    alert(
+                        "Please enter the event location."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    selectedPhotos.length === 0
+                ) {
+
+                    alert(
+                        "Please upload at least one photo."
+                    );
+
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   LOADING STATE
+                ----------------------------------------- */
+
+                if (createButton) {
+
+                    createButton.disabled =
+                        true;
+
+                    createButton.innerHTML =
+                        `
+                        Creating Album...
+                        <span>⏳</span>
+                        `;
+                }
+
+
+                try {
+
+                    /* =====================================
+                       STEP 1
+                       CREATE ALBUM IN DATABASE
+                    ===================================== */
+
+                    const {
+                        data: album,
+                        error: albumError
+                    } = await supabase
+                        .from("albums")
+                        .insert({
+                            user_id: user.id,
+                            name: albumName,
+                            event_date: eventDate,
+                            location: location,
+                            description: description,
+                            privacy: privacy
+                        })
+                        .select()
+                        .single();
+
+
+                    if (albumError) {
+
+                        console.error(
+                            "Album creation error:",
+                            albumError
+                        );
+
+                        throw new Error(
+                            "Could not create album: " +
+                            albumError.message
+                        );
+                    }
+
+
+                    console.log(
+                        "Album created:",
+                        album
+                    );
+
+
+                    /* =====================================
+                       STEP 2
+                       UPLOAD PHOTOS TO STORAGE
+                    ===================================== */
+
+                    const photoRecords = [];
+
+
+                    for (
+                        const photo
+                        of selectedPhotos
+                    ) {
+
+                        const safeFileName =
+                            photo.file.name
+                                .replace(
+                                    /[^a-zA-Z0-9._-]/g,
+                                    "_"
+                                );
+
+
+                        const storagePath =
+                            `${user.id}/${album.id}/${Date.now()}-${safeFileName}`;
+
+
+                        console.log(
+                            "Uploading:",
+                            storagePath
+                        );
+
+
+                        const {
+                            error: uploadError
+                        } = await supabase
+.storage
+.from("shotmarket-photos")
+.upload(
+    storagePath,
+    photo.file,
+    {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: photo.file.type
+    }
+);
+
+
+                        if (uploadError) {
+
+                            console.error(
+                                "Storage upload error:",
+                                uploadError
+                            );
+
+                            throw new Error(
+                                `Could not upload ${photo.file.name}: ${uploadError.message}`
+                            );
+                        }
+
+
+                        /* =================================
+                           STEP 3
+                           CREATE PHOTO DATABASE RECORD
+                        ================================= */
+
+                       const { data: publicUrlData } =
+    supabase
+        .storage
+        .from("shotmarket-photos")
+        .getPublicUrl(storagePath);
+
+const fileUrl = publicUrlData.publicUrl;
+
+photoRecords.push({
+    album_id: album.id,
+
+    user_id: user.id,
+
+    file_name: photo.file.name,
+
+    storage_path: storagePath,
+
+    file_url: fileUrl,
+
+    price: 0,
+
+    is_available: true
+});
+
+                    }
+
+
+                    /* =====================================
+                       STEP 4
+                       INSERT PHOTO RECORDS
+                    ===================================== */
+
+                    if (
+                        photoRecords.length > 0
+                    ) {
+
+                        const {
+                            error: photoError
+                        } = await supabase
+                            .from("photos")
+                            .insert(
+                                photoRecords
+                            );
+
+
+                        if (photoError) {
+
+                            console.error(
+                                "Photo database error:",
+                                photoError
+                            );
+
+                            throw new Error(
+                                "Photos uploaded but database records could not be created: " +
+                                photoError.message
+                            );
+                        }
+                    }
+
+
+                    /* =====================================
+                       STEP 5
+                       GENERATE QR CODE
+                    ===================================== */
+
+                    generateQRCode(
+                        album.id
+                    );
+
+
+                    /* =====================================
+                       STEP 6
+                       SAVE QR CODE URL IN DATABASE
+                    ===================================== */
+
+                    const galleryURL =
+                        getGalleryURL(
+                            album.id
+                        );
+
+
+                    const {
+                        error: qrError
+                    } = await supabase
+                        .from("albums")
+                        .update({
+                            qr_code:
+                                galleryURL
+                        })
+                        .eq(
+                            "id",
+                            album.id
+                        );
+
+
+                    if (qrError) {
+
+                        console.warn(
+                            "QR URL could not be saved:",
+                            qrError
+                        );
+                    }
+
+
+                    /* =====================================
+                       STEP 7
+                       SUCCESS MESSAGE
+                    ===================================== */
+
+                    if (successMessage) {
+
+                        successMessage.innerHTML = `
+                            <strong>
+                                ✓ Album created successfully!
+                            </strong>
+
+                            <br>
+
+                            ${selectedPhotos.length}
+                            photo${selectedPhotos.length === 1 ? "" : "s"}
+                            uploaded successfully.
+
+                            <br>
+
+                            Your customers can scan
+                            the QR code to access this gallery.
+                        `;
+
+                        successMessage.style.display =
+                            "block";
+                    }
+
+
+                    /* =====================================
+                       STEP 8
+                       SAVE CURRENT ALBUM ID
+                       TEMPORARY NAVIGATION HELPER
+                    ===================================== */
+
+                    sessionStorage.setItem(
+                        "shotmarket_current_album",
+                        album.id
+                    );
+
+
+                    console.log(
+                        "ShotMarket album completed:",
+                        album.id
+                    );
+
+
+                    alert(
+                        "Album created and photos uploaded successfully!"
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "ShotMarket upload error:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Something went wrong while creating the album."
+                    );
+
+                } finally {
+
+                    if (createButton) {
+
+                        createButton.disabled =
+                            false;
+
+                        createButton.innerHTML =
+                            `
+                            Create Album & Generate QR
+                            <span> →</span>
+                            `;
+                    }
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       GENERATE QR CODE
+    ===================================================== */
 
     function generateQRCode(albumId) {
 
@@ -346,21 +783,18 @@ localStorage.setItem(
             return;
         }
 
+
         qrContainer.innerHTML = "";
 
-        // URL customer will open
-        const galleryURL =
-            window.location.origin +
-            window.location.pathname
-                .replace(
-                    /[^/]+$/,
-                    ""
-                ) +
-            "gallery.html?album=" +
-            encodeURIComponent(albumId);
 
-        // QRCode.js
-        if (typeof QRCode === "undefined") {
+        const galleryURL =
+            getGalleryURL(albumId);
+
+
+        if (
+            typeof QRCode ===
+            "undefined"
+        ) {
 
             qrContainer.innerHTML = `
                 <p style="color:#e8c547;">
@@ -368,45 +802,61 @@ localStorage.setItem(
                 </p>
             `;
 
-            console.error(
-                "QRCode library is missing."
-            );
-
             return;
         }
 
-        new QRCode(qrContainer, {
 
-            text: galleryURL,
+        new QRCode(
+            qrContainer,
+            {
+                text:
+                    galleryURL,
 
-            width: 180,
+                width:
+                    180,
 
-            height: 180,
+                height:
+                    180,
 
-            colorDark: "#000000",
+                colorDark:
+                    "#000000",
 
-            colorLight: "#ffffff",
+                colorLight:
+                    "#ffffff",
 
-            correctLevel:
-                QRCode.CorrectLevel.H
+                correctLevel:
+                    QRCode.CorrectLevel.H
+            }
+        );
 
-        });
 
         if (qrPlaceholder) {
-            qrPlaceholder.style.display = "none";
+
+            qrPlaceholder.style.display =
+                "none";
         }
 
-        if (qrContainer.style) {
-            qrContainer.style.display = "block";
-        }
+
+        qrContainer.style.display =
+            "block";
+
 
         if (qrStatus) {
-            qrStatus.textContent = "● QR Generated";
+
+            qrStatus.textContent =
+                "● QR Generated";
         }
 
+
         if (downloadQrButton) {
-            downloadQrButton.style.display = "inline-flex";
+
+            downloadQrButton.style.display =
+                "inline-flex";
+
+            downloadQrButton.onclick =
+                downloadQRCode;
         }
+
 
         console.log(
             "QR Code URL:",
@@ -414,98 +864,98 @@ localStorage.setItem(
         );
     }
 
-    // ---------------------------------------------------------
-    // IMAGE COMPRESSION
-    // ---------------------------------------------------------
 
-    function compressImage(file) {
+    /* =====================================================
+       GALLERY URL
+    ===================================================== */
 
-        return new Promise((resolve, reject) => {
+    function getGalleryURL(albumId) {
 
-            const reader =
-                new FileReader();
-
-            reader.onload = function (event) {
-
-                const img =
-                    new Image();
-
-                img.onload = function () {
-
-                    const MAX_WIDTH = 1600;
-
-                    let width =
-                        img.width;
-
-                    let height =
-                        img.height;
-
-                    if (width > MAX_WIDTH) {
-
-                        height =
-                            height *
-                            (MAX_WIDTH / width);
-
-                        width =
-                            MAX_WIDTH;
-                    }
-
-                    const canvas =
-                        document.createElement(
-                            "canvas"
-                        );
-
-                    canvas.width =
-                        width;
-
-                    canvas.height =
-                        height;
-
-                    const ctx =
-                        canvas.getContext("2d");
-
-                    ctx.drawImage(
-                        img,
-                        0,
-                        0,
-                        width,
-                        height
-                    );
-
-                    const compressed =
-                        canvas.toDataURL(
-                            "image/jpeg",
-                            0.82
-                        );
-
-                    resolve(compressed);
-                };
-
-                img.onerror = reject;
-
-                img.src =
-                    event.target.result;
-            };
-
-            reader.onerror =
-                reject;
-
-            reader.readAsDataURL(file);
-        });
+        return (
+            window.location.origin +
+            window.location.pathname
+                .replace(
+                    /[^/]+$/,
+                    ""
+                ) +
+            "gallery.html?album=" +
+            encodeURIComponent(
+                albumId
+            )
+        );
     }
 
-    // ---------------------------------------------------------
-    // SECURITY / HTML ESCAPE
-    // ---------------------------------------------------------
+
+    /* =====================================================
+       DOWNLOAD QR CODE
+    ===================================================== */
+
+    function downloadQRCode() {
+
+        const qrImage =
+            qrContainer?.querySelector(
+                "img"
+            );
+
+
+        if (!qrImage) {
+
+            alert(
+                "Please generate the QR code first."
+            );
+
+            return;
+        }
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href =
+            qrImage.src;
+
+        link.download =
+            "shotmarket-qr-code.png";
+
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        link.remove();
+    }
+
+
+    /* =====================================================
+       HTML ESCAPE
+    ===================================================== */
 
     function escapeHTML(text) {
 
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return String(text)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
     }
 
 });

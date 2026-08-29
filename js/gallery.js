@@ -1,98 +1,157 @@
 /* =========================================================
-   SHOTMARKET GALLERY SYSTEM
+   SHOTMARKET - DATABASE GALLERY
+   Gallery → Supabase Albums → Photos → Storage
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+import { createClient } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 
-    // =====================================================
-    // ELEMENTS
-    // =====================================================
+/* =========================================================
+   SUPABASE
+   ========================================================= */
 
-    const photoGrid =
-        document.getElementById("photoGrid");
+const SUPABASE_URL =
+    "https://xplcaiygifwnxyevvqsr.supabase.co";
 
-    const emptyState =
-        document.getElementById("emptyState");
+const SUPABASE_KEY =
+    "sb_publishable_16S4x_HPLxfsUk1RTgR4Qw_gnvlyqD_";
 
-    const errorState =
-        document.getElementById("errorState");
-
-    const albumTitle =
-        document.getElementById("albumTitle");
-
-    const albumDate =
-        document.getElementById("albumDate");
-
-    const albumLocation =
-        document.getElementById("albumLocation");
-
-    const albumPhotoCount =
-        document.getElementById("albumPhotoCount");
-
-    const selectedCounter =
-        document.getElementById("selectedCounter");
-
-    const purchaseBar =
-        document.getElementById("purchaseBar");
-
-    const purchaseCount =
-        document.getElementById("purchaseCount");
-
-    const selectAllBtn =
-        document.getElementById("selectAllBtn");
-
-    const continuePaymentBtn =
-        document.getElementById("continuePaymentBtn");
+const supabase =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
-    // =====================================================
-    // STATE
-    // =====================================================
+/* =========================================================
+   PAGE START
+   ========================================================= */
 
-    let currentAlbum = null;
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    let selectedPhotos = [];
-
-    let currentLightboxIndex = 0;
-
-
-    // =====================================================
-    // GET ALBUM ID FROM URL
-    // =====================================================
-
-    const urlParams =
-        new URLSearchParams(window.location.search);
-
-    const albumId =
-        urlParams.get("album");
+        console.log(
+            "ShotMarket Gallery System Loaded 🚀"
+        );
 
 
-    // =====================================================
-    // LOAD ALBUM
-    // =====================================================
+        /* =================================================
+           ELEMENTS
+        ================================================= */
 
-    function loadAlbum() {
+        const albumTitle =
+            document.getElementById("albumTitle");
 
-        let albums = [];
+        const albumDescription =
+            document.getElementById("albumDescription");
 
+        const albumDate =
+            document.getElementById("albumDate");
 
-        try {
+        const albumLocation =
+            document.getElementById("albumLocation");
 
-                // Try the canonical storage key used by the upload/storage modules
-                albums =
-                    JSON.parse(
-                        localStorage.getItem(
-                            "shotmarket_albums"
-                        )
-                    ) || [];
+        const albumPhotoCount =
+            document.getElementById("albumPhotoCount");
 
-        } catch (error) {
+        const photoGrid =
+            document.getElementById("photoGrid");
 
-            console.error(
-                "Could not read albums:",
-                error
+        const emptyState =
+            document.getElementById("emptyState");
+
+        const errorState =
+            document.getElementById("errorState");
+
+        const selectAllBtn =
+            document.getElementById("selectAllBtn");
+
+        const selectedCounter =
+            document.getElementById("selectedCounter");
+
+        const purchaseBar =
+            document.getElementById("purchaseBar");
+
+        const purchaseCount =
+            document.getElementById("purchaseCount");
+
+        const continuePaymentBtn =
+            document.getElementById(
+                "continuePaymentBtn"
             );
+
+
+        /* =================================================
+           LIGHTBOX ELEMENTS
+        ================================================= */
+
+        const lightbox =
+            document.getElementById("lightbox");
+
+        const lightboxImage =
+            document.getElementById("lightboxImage");
+
+        const closeLightbox =
+            document.getElementById("closeLightbox");
+
+        const previousPhoto =
+            document.getElementById("previousPhoto");
+
+        const nextPhoto =
+            document.getElementById("nextPhoto");
+
+        const lightboxCounter =
+            document.getElementById("lightboxCounter");
+
+
+        /* =================================================
+           STATE
+        ================================================= */
+
+        let album = null;
+
+        let photos = [];
+
+        let selectedPhotos = [];
+
+        let currentLightboxIndex = 0;
+
+
+        /* =================================================
+           GET ALBUM ID FROM URL
+        ================================================= */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        let albumId =
+            urlParams.get("album");
+
+
+        if (!albumId) {
+
+            albumId =
+                sessionStorage.getItem(
+                    "shotmarket_current_album"
+                );
+        }
+
+
+        console.log(
+            "Gallery Album ID:",
+            albumId
+        );
+
+
+        /* =================================================
+           VALIDATE ALBUM ID
+        ================================================= */
+
+        if (!albumId) {
 
             showError();
 
@@ -100,911 +159,1016 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        // -------------------------------------------------
-        // If no album ID was provided
-        // -------------------------------------------------
+        /* =================================================
+           LOAD GALLERY
+        ================================================= */
 
-        if (!albumId) {
+        await loadGallery();
 
-            // Try latest album
+
+        /* =================================================
+           LOAD GALLERY FUNCTION
+        ================================================= */
+
+        async function loadGallery() {
 
             try {
-                // The upload flow saves the latest album ID as a plain string
-                // under the key `shotmarket_current_album`. Read that first
-                // and locate the album by id in the albums array.
 
-                const latestId =
-                    localStorage.getItem(
-                        "shotmarket_current_album"
-                    ) || localStorage.getItem("shotmarketCurrentAlbum");
+                /* =========================================
+                   STEP 1
+                   LOAD ALBUM
+                ========================================= */
 
-                if (latestId) {
+                const {
+                    data: albumData,
+                    error: albumError
+                } = await supabase
+                    .from("albums")
+                    .select("*")
+                    .eq(
+                        "id",
+                        albumId
+                    )
+                    .single();
 
-                    currentAlbum = albums.find(
-                        album => album.id === latestId
+
+                if (albumError) {
+
+                    console.error(
+                        "Album loading error:",
+                        albumError
                     );
 
-                } else {
-
-                    currentAlbum = null;
-
+                    throw albumError;
                 }
 
-            } catch (error) {
 
-                console.error("Could not read current album:", error);
+                if (!albumData) {
 
-                currentAlbum = null;
+                    showError();
 
-            }
+                    return;
+                }
 
 
-            if (!currentAlbum) {
+                album =
+                    albumData;
 
-                showError();
 
-                return;
-
-            }
-
-        } else {
-
-            // -------------------------------------------------
-            // Find requested album
-            // -------------------------------------------------
-
-            currentAlbum =
-                albums.find(
-                    album => album.id === albumId
+                console.log(
+                    "Album loaded:",
+                    album
                 );
 
 
-            if (!currentAlbum) {
+                /* =========================================
+                   STEP 2
+                   DISPLAY ALBUM INFORMATION
+                ========================================= */
 
-                showError();
-
-                return;
-
-            }
-
-        }
+                displayAlbum();
 
 
-        renderAlbum();
+                /* =========================================
+                   STEP 3
+                   LOAD PHOTOS
+                ========================================= */
 
-        renderPhotos();
-
-        updateSelection();
-
-    }
-
-
-    // =====================================================
-    // RENDER ALBUM INFORMATION
-    // =====================================================
-
-    function renderAlbum() {
-
-        albumTitle.textContent =
-            currentAlbum.name ||
-            "Untitled Album";
-
-
-        // Date
-
-        if (currentAlbum.date) {
-
-            const date =
-                new Date(currentAlbum.date);
-
-
-            if (!isNaN(date)) {
-
-                albumDate.textContent =
-                    date.toLocaleDateString(
-                        "en-US",
+                const {
+                    data: photoData,
+                    error: photoError
+                } = await supabase
+                    .from("photos")
+                    .select("*")
+                    .eq(
+                        "album_id",
+                        albumId
+                    )
+                    .order(
+                        "created_at",
                         {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric"
+                            ascending: true
                         }
                     );
 
-            } else {
 
-                albumDate.textContent =
-                    currentAlbum.date;
+                if (photoError) {
 
+                    console.error(
+                        "Photo loading error:",
+                        photoError
+                    );
+
+                    throw photoError;
+                }
+
+
+                photos =
+                    photoData || [];
+
+
+                console.log(
+                    "Photos loaded:",
+                    photos
+                );
+
+
+                /* =========================================
+                   STEP 4
+                   BUILD STORAGE URLS
+                ========================================= */
+
+                photos =
+                    photos.map(
+                        photo => {
+
+                            const {
+                                data
+                            } =
+                                supabase
+                                    .storage
+                                    .from(
+                                        "shotmarket-photos"
+                                    )
+                                    .getPublicUrl(
+                                        photo.storage_path
+                                    );
+
+
+                            return {
+                                ...photo,
+                                displayUrl:
+                                    data.publicUrl
+                            };
+                        }
+                    );
+
+
+                /* =========================================
+                   STEP 5
+                   DISPLAY PHOTOS
+                ========================================= */
+
+                displayPhotos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Gallery loading failed:",
+                    error
+                );
+
+                showError();
+            }
+        }
+
+
+        /* =================================================
+           DISPLAY ALBUM
+        ================================================= */
+
+        function displayAlbum() {
+
+            if (!album) {
+                return;
             }
 
-        } else {
 
-            albumDate.textContent =
-                "Date unavailable";
+            if (albumTitle) {
 
+                albumTitle.textContent =
+                    album.name ||
+                    "Untitled Album";
+            }
+
+
+            if (albumDescription) {
+
+                albumDescription.textContent =
+                    album.description ||
+                    "Your photographer has prepared your private photo gallery.";
+            }
+
+
+            if (albumDate) {
+
+                albumDate.textContent =
+                    formatDate(
+                        album.event_date
+                    );
+            }
+
+
+            if (albumLocation) {
+
+                albumLocation.textContent =
+                    album.location ||
+                    "—";
+            }
+
+
+            if (albumPhotoCount) {
+
+                albumPhotoCount.textContent =
+                    `${photos.length} photo${
+                        photos.length === 1
+                            ? ""
+                            : "s"
+                    }`;
+            }
         }
 
 
-        // Location
+        /* =================================================
+           DISPLAY PHOTOS
+        ================================================= */
 
-        albumLocation.textContent =
-            currentAlbum.location ||
-            "Location unavailable";
+        function displayPhotos() {
 
+            if (!photoGrid) {
+                return;
+            }
 
-        // Photo count
 
-        const photos =
-            currentAlbum.photos || [];
+            photoGrid.innerHTML = "";
 
 
-        albumPhotoCount.textContent =
-            `${photos.length} photo${photos.length === 1 ? "" : "s"}`;
+            if (!photos.length) {
 
-    }
+                if (emptyState) {
 
+                    emptyState.style.display =
+                        "block";
+                }
 
-    // =====================================================
-    // RENDER PHOTOS
-    // =====================================================
+                if (purchaseBar) {
 
-    function renderPhotos() {
+                    purchaseBar.style.display =
+                        "none";
+                }
 
-        const photos =
-            currentAlbum.photos || [];
+                return;
+            }
 
 
-        photoGrid.innerHTML = "";
+            if (emptyState) {
 
+                emptyState.style.display =
+                    "none";
+            }
 
-        if (photos.length === 0) {
 
-            photoGrid.style.display =
-                "none";
+            if (purchaseBar) {
 
-            emptyState.style.display =
-                "flex";
+                purchaseBar.style.display =
+                    "flex";
+                purchaseBar.classList.toggle(
+                    "active",
+                    selectedPhotos.length > 0
+                );
+            }
 
-            return;
 
-        }
+            photos.forEach(
+                (photo, index) => {
 
-
-        photoGrid.style.display =
-            "grid";
-
-        emptyState.style.display =
-            "none";
-
-
-        photos.forEach((photo, index) => {
-
-            const card =
-                document.createElement("article");
-
-
-            card.className =
-                "photo-card";
-
-
-            card.dataset.index =
-                index;
-
-
-            card.innerHTML = `
-
-                <div class="photo-image-wrapper">
-
-                    <img
-                        src="${photo.data}"
-                        alt="${escapeHTML(photo.name || "Photo")}"
-                        class="gallery-photo"
-                        loading="lazy"
-                    >
-
-
-                    <div class="photo-overlay">
-
-                        <button
-                            type="button"
-                            class="preview-photo"
-                            data-index="${index}"
-                            title="Preview"
-                        >
-
-                            <i class="fa-solid fa-expand"></i>
-
-                        </button>
-
-                    </div>
-
-
-                    <label class="photo-checkbox">
-
-                        <input
-                            type="checkbox"
-                            class="photo-select"
-                            data-index="${index}"
-                        >
-
-                        <span class="custom-checkbox">
-
-                            <i class="fa-solid fa-check"></i>
-
-                        </span>
-
-                    </label>
-
-                </div>
-
-
-                <div class="photo-card-info">
-
-                    <span class="photo-number">
-                        Photo ${index + 1}
-                    </span>
-
-                    <span class="photo-filename">
-                        ${escapeHTML(photo.name || "Untitled")}
-                    </span>
-
-                </div>
-
-            `;
-
-
-            photoGrid.appendChild(card);
-
-        });
-
-
-        attachPhotoEvents();
-
-    }
-
-
-    // =====================================================
-    // PHOTO EVENTS
-    // =====================================================
-
-    function attachPhotoEvents() {
-
-        // ---------------------------------------------
-        // CHECKBOXES
-        // ---------------------------------------------
-
-        const checkboxes =
-            document.querySelectorAll(
-                ".photo-select"
-            );
-
-
-        checkboxes.forEach(checkbox => {
-
-            checkbox.addEventListener(
-                "change",
-                () => {
-
-                    const index =
-                        Number(
-                            checkbox.dataset.index
+                    const card =
+                        document.createElement(
+                            "div"
                         );
 
 
-                    if (checkbox.checked) {
+                    card.className =
+                        "photo-card";
 
-                        if (
-                            !selectedPhotos.includes(index)
-                        ) {
 
-                            selectedPhotos.push(index);
+                    card.dataset.photoId =
+                        photo.id;
 
+
+                    card.innerHTML = `
+
+                        <div class="photo-image-wrapper">
+
+                            <img
+                                src="${escapeHTML(
+                                    photo.displayUrl
+                                )}"
+                                alt="${escapeHTML(
+                                    photo.file_name ||
+                                    "ShotMarket Photo"
+                                )}"
+                                loading="lazy"
+                            >
+
+                            <div class="photo-overlay">
+
+                                <button
+                                    type="button"
+                                    class="preview-photo-btn"
+                                    data-index="${index}"
+                                    aria-label="Preview photo"
+                                >
+                                    <i class="fa-solid fa-expand"></i>
+                                </button>
+
+                            </div>
+
+                            <label class="photo-select">
+
+                                <input
+                                    type="checkbox"
+                                    class="photo-checkbox"
+                                    data-photo-id="${photo.id}"
+                                >
+
+                                <span>
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    `;
+
+
+                    photoGrid.appendChild(
+                        card
+                    );
+                }
+            );
+
+
+            attachPhotoEvents();
+
+
+            updateSelection();
+        }
+
+
+        /* =================================================
+           PHOTO EVENTS
+        ================================================= */
+
+        function attachPhotoEvents() {
+
+            const checkboxes =
+                photoGrid.querySelectorAll(
+                    ".photo-checkbox"
+                );
+
+
+            checkboxes.forEach(
+                checkbox => {
+
+                    checkbox.addEventListener(
+                        "change",
+                        function () {
+
+                            const photoId =
+                                this.dataset.photoId;
+
+
+                            if (
+                                this.checked
+                            ) {
+
+                                if (
+                                    !selectedPhotos.includes(
+                                        photoId
+                                    )
+                                ) {
+
+                                    selectedPhotos.push(
+                                        photoId
+                                    );
+                                }
+
+                            } else {
+
+                                selectedPhotos =
+                                    selectedPhotos.filter(
+                                        id =>
+                                            id !== photoId
+                                    );
+                            }
+
+
+                            updateSelection();
                         }
+                    );
+                }
+            );
+
+
+            const previewButtons =
+                photoGrid.querySelectorAll(
+                    ".preview-photo-btn"
+                );
+
+
+            previewButtons.forEach(
+                button => {
+
+                    button.addEventListener(
+                        "click",
+                        function (event) {
+
+                            event.stopPropagation();
+
+                            const index =
+                                Number(
+                                    this.dataset.index
+                                );
+
+                            openLightbox(
+                                index
+                            );
+                        }
+                    );
+                }
+            );
+
+
+            const imageWrappers =
+                photoGrid.querySelectorAll(
+                    ".photo-image-wrapper"
+                );
+
+
+            imageWrappers.forEach(
+                wrapper => {
+
+                    wrapper.addEventListener(
+                        "dblclick",
+                        function () {
+
+                            const card =
+                                this.closest(
+                                    ".photo-card"
+                                );
+
+                            if (!card) {
+                                return;
+                            }
+
+
+                            const photoId =
+                                card.dataset.photoId;
+
+
+                            const checkbox =
+                                card.querySelector(
+                                    ".photo-checkbox"
+                                );
+
+
+                            if (checkbox) {
+
+                                checkbox.checked =
+                                    !checkbox.checked;
+
+
+                                checkbox.dispatchEvent(
+                                    new Event(
+                                        "change"
+                                    )
+                                );
+                            }
+                        }
+                    );
+                }
+            );
+        }
+
+
+        /* =================================================
+           UPDATE SELECTION
+        ================================================= */
+
+        function updateSelection() {
+
+            const count =
+                selectedPhotos.length;
+
+
+            if (selectedCounter) {
+
+                selectedCounter.textContent =
+                    `${count} selected`;
+            }
+
+
+            if (purchaseCount) {
+
+                purchaseCount.textContent =
+                    count;
+            }
+
+
+            if (purchaseBar) {
+
+                purchaseBar.classList.toggle(
+                    "active",
+                    count > 0
+                );
+            }
+
+
+            if (continuePaymentBtn) {
+
+                continuePaymentBtn.disabled =
+                    count === 0;
+            }
+
+
+            /* =============================================
+               HIGHLIGHT SELECTED CARDS
+            ============================================= */
+
+            const cards =
+                photoGrid.querySelectorAll(
+                    ".photo-card"
+                );
+
+
+            cards.forEach(
+                card => {
+
+                    const photoId =
+                        card.dataset.photoId;
+
+
+                    if (
+                        selectedPhotos.includes(
+                            photoId
+                        )
+                    ) {
+
+                        card.classList.add(
+                            "selected"
+                        );
 
                     } else {
 
-                        selectedPhotos =
-                            selectedPhotos.filter(
-                                item => item !== index
+                        card.classList.remove(
+                            "selected"
+                        );
+                    }
+                }
+            );
+        }
+
+
+        /* =================================================
+           SELECT ALL
+        ================================================= */
+
+        if (selectAllBtn) {
+
+            selectAllBtn.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        selectedPhotos.length ===
+                        photos.length
+                    ) {
+
+                        /* UNSELECT ALL */
+
+                        selectedPhotos = [];
+
+
+                        const checkboxes =
+                            photoGrid.querySelectorAll(
+                                ".photo-checkbox"
                             );
 
+
+                        checkboxes.forEach(
+                            checkbox => {
+
+                                checkbox.checked =
+                                    false;
+                            }
+                        );
+
+
+                        selectAllBtn.innerHTML = `
+                            <i class="fa-regular fa-square-check"></i>
+                            Select All
+                        `;
+
+                    } else {
+
+                        /* SELECT ALL */
+
+                        selectedPhotos =
+                            photos.map(
+                                photo =>
+                                    photo.id
+                            );
+
+
+                        const checkboxes =
+                            photoGrid.querySelectorAll(
+                                ".photo-checkbox"
+                            );
+
+
+                        checkboxes.forEach(
+                            checkbox => {
+
+                                checkbox.checked =
+                                    true;
+                            }
+                        );
+
+
+                        selectAllBtn.innerHTML = `
+                            <i class="fa-solid fa-square-check"></i>
+                            Unselect All
+                        `;
                     }
 
 
                     updateSelection();
-
                 }
             );
-
-        });
-
-
-        // ---------------------------------------------
-        // PREVIEW BUTTONS
-        // ---------------------------------------------
-
-        const previewButtons =
-            document.querySelectorAll(
-                ".preview-photo"
-            );
+        }
 
 
-        previewButtons.forEach(button => {
+        /* =================================================
+           CONTINUE TO PAYMENT
+        ================================================= */
 
-            button.addEventListener(
+        if (continuePaymentBtn) {
+
+            continuePaymentBtn.addEventListener(
                 "click",
-                event => {
+                () => {
 
-                    event.stopPropagation();
+                    if (
+                        selectedPhotos.length ===
+                        0
+                    ) {
 
-
-                    const index =
-                        Number(
-                            button.dataset.index
+                        alert(
+                            "Please select at least one photo."
                         );
 
-
-                    openLightbox(index);
-
-                }
-            );
-
-        });
+                        return;
+                    }
 
 
-        // ---------------------------------------------
-        // CLICK IMAGE TO PREVIEW
-        // ---------------------------------------------
+                    /* =====================================
+                       SAVE SELECTION
+                    ===================================== */
 
-        const images =
-            document.querySelectorAll(
-                ".gallery-photo"
-            );
-
-
-        images.forEach(image => {
-
-            image.addEventListener(
-                "click",
-                event => {
-
-                    event.stopPropagation();
+                    sessionStorage.setItem(
+                        "shotmarket_selected_photos",
+                        JSON.stringify(
+                            selectedPhotos
+                        )
+                    );
 
 
-                    const card =
-                        image.closest(".photo-card");
+                    sessionStorage.setItem(
+                        "shotmarket_current_album",
+                        albumId
+                    );
 
 
-                    const index =
-                        Number(
-                            card.dataset.index
+                    /* =====================================
+                       GO TO PAYMENT
+                    ===================================== */
+
+                    window.location.href =
+                        "payment.html?album=" +
+                        encodeURIComponent(
+                            albumId
                         );
-
-
-                    openLightbox(index);
-
                 }
             );
-
-        });
-
-    }
-
-
-    // =====================================================
-    // UPDATE SELECTION
-    // =====================================================
-
-    function updateSelection() {
-
-        const count =
-            selectedPhotos.length;
-
-
-        selectedCounter.textContent =
-            `${count} selected`;
-
-
-        purchaseCount.textContent =
-            count;
-
-
-        // Enable/disable payment button
-
-        continuePaymentBtn.disabled =
-            count === 0;
-
-
-        // Update button appearance
-
-        if (count > 0) {
-
-            purchaseBar.classList.add(
-                "active"
-            );
-
-        } else {
-
-            purchaseBar.classList.remove(
-                "active"
-            );
-
         }
 
 
-        // Update checkboxes
+        /* =================================================
+           LIGHTBOX
+        ================================================= */
 
-        document
-            .querySelectorAll(".photo-select")
-            .forEach(checkbox => {
+        function openLightbox(index) {
 
-                const index =
-                    Number(
-                        checkbox.dataset.index
-                    );
-
-
-                checkbox.checked =
-                    selectedPhotos.includes(index);
-
-
-                const card =
-                    checkbox.closest(".photo-card");
-
-
-                if (card) {
-
-                    card.classList.toggle(
-                        "selected",
-                        checkbox.checked
-                    );
-
-                }
-
-            });
-
-
-        // Select all button
-
-        const total =
-            currentAlbum?.photos?.length || 0;
-
-
-        if (
-            total > 0 &&
-            count === total
-        ) {
-
-            selectAllBtn.innerHTML = `
-                <i class="fa-solid fa-square-minus"></i>
-                Clear Selection
-            `;
-
-        } else {
-
-            selectAllBtn.innerHTML = `
-                <i class="fa-regular fa-square-check"></i>
-                Select All
-            `;
-
-        }
-
-    }
-
-
-    // =====================================================
-    // SELECT ALL
-    // =====================================================
-
-    selectAllBtn.addEventListener(
-        "click",
-        () => {
-
-            const total =
-                currentAlbum?.photos?.length || 0;
-
-
-            if (selectedPhotos.length === total) {
-
-                selectedPhotos = [];
-
-            } else {
-
-                selectedPhotos =
-                    Array.from(
-                        { length: total },
-                        (_, index) => index
-                    );
-
-            }
-
-
-            updateSelection();
-
-        }
-    );
-
-
-    // =====================================================
-    // CONTINUE TO PAYMENT
-    // =====================================================
-
-    continuePaymentBtn.addEventListener(
-        "click",
-        () => {
-
-            if (selectedPhotos.length === 0) {
-
+            if (
+                !photos.length ||
+                index < 0 ||
+                index >= photos.length
+            ) {
                 return;
-
             }
 
 
-            // -----------------------------------------
-            // Get selected photo objects
-            // -----------------------------------------
+            currentLightboxIndex =
+                index;
 
-            const photos =
-                selectedPhotos.map(
-                    index =>
-                        currentAlbum.photos[index]
+
+            updateLightbox();
+
+
+            if (lightbox) {
+
+                lightbox.classList.add(
+                    "active"
+                );
+            }
+        }
+
+
+        function updateLightbox() {
+
+            const photo =
+                photos[
+                    currentLightboxIndex
+                ];
+
+
+            if (!photo) {
+                return;
+            }
+
+
+            if (lightboxImage) {
+
+                lightboxImage.src =
+                    photo.displayUrl;
+
+                lightboxImage.alt =
+                    photo.file_name ||
+                    "ShotMarket Photo";
+            }
+
+
+            if (lightboxCounter) {
+
+                lightboxCounter.textContent =
+                    `${currentLightboxIndex + 1} / ${photos.length}`;
+            }
+        }
+
+
+        /* =================================================
+           CLOSE LIGHTBOX
+        ================================================= */
+
+        if (closeLightbox) {
+
+            closeLightbox.addEventListener(
+                "click",
+                () => {
+
+                    if (lightbox) {
+
+                        lightbox.classList.remove(
+                            "active"
+                        );
+                    }
+                }
+            );
+        }
+
+
+        /* =================================================
+           PREVIOUS PHOTO
+        ================================================= */
+
+        if (previousPhoto) {
+
+            previousPhoto.addEventListener(
+                "click",
+                () => {
+
+                    if (!photos.length) {
+                        return;
+                    }
+
+
+                    currentLightboxIndex =
+                        (
+                            currentLightboxIndex -
+                            1 +
+                            photos.length
+                        ) %
+                        photos.length;
+
+
+                    updateLightbox();
+                }
+            );
+        }
+
+
+        /* =================================================
+           NEXT PHOTO
+        ================================================= */
+
+        if (nextPhoto) {
+
+            nextPhoto.addEventListener(
+                "click",
+                () => {
+
+                    if (!photos.length) {
+                        return;
+                    }
+
+
+                    currentLightboxIndex =
+                        (
+                            currentLightboxIndex +
+                            1
+                        ) %
+                        photos.length;
+
+
+                    updateLightbox();
+                }
+            );
+        }
+
+
+        /* =================================================
+           CLOSE LIGHTBOX ON BACKDROP
+        ================================================= */
+
+        if (lightbox) {
+
+            lightbox.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target ===
+                        lightbox
+                    ) {
+
+                        lightbox.classList.remove(
+                            "active"
+                        );
+                    }
+                }
+            );
+        }
+
+
+        /* =================================================
+           KEYBOARD LIGHTBOX CONTROLS
+        ================================================= */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    !lightbox ||
+                    !lightbox.classList.contains(
+                        "active"
+                    )
+                ) {
+                    return;
+                }
+
+
+                if (
+                    event.key ===
+                    "Escape"
+                ) {
+
+                    lightbox.classList.remove(
+                        "active"
+                    );
+                }
+
+
+                if (
+                    event.key ===
+                    "ArrowLeft"
+                ) {
+
+                    previousPhoto?.click();
+                }
+
+
+                if (
+                    event.key ===
+                    "ArrowRight"
+                ) {
+
+                    nextPhoto?.click();
+                }
+            }
+        );
+
+
+        /* =================================================
+           FORMAT DATE
+        ================================================= */
+
+        function formatDate(dateString) {
+
+            if (!dateString) {
+                return "—";
+            }
+
+
+            const date =
+                new Date(
+                    dateString +
+                    "T00:00:00"
                 );
 
 
-            // -----------------------------------------
-            // Save purchase information
-            // -----------------------------------------
-
-            const purchase = {
-
-                albumId:
-                    currentAlbum.id,
-
-                albumName:
-                    currentAlbum.name,
-
-                photos:
-                    photos,
-
-                photoCount:
-                    photos.length,
-
-                createdAt:
-                    new Date().toISOString()
-
-            };
-
-
-            localStorage.setItem(
-
-                "shotmarketCurrentPurchase",
-
-                JSON.stringify(purchase)
-
-            );
-
-
-            // -----------------------------------------
-            // Go to payment
-            // -----------------------------------------
-
-            window.location.href =
-                `payment.html?album=${encodeURIComponent(
-                    currentAlbum.id
-                )}`;
-
-        }
-    );
-
-
-    // =====================================================
-    // LIGHTBOX
-    // =====================================================
-
-    const lightbox =
-        document.getElementById("lightbox");
-
-    const lightboxImage =
-        document.getElementById("lightboxImage");
-
-    const lightboxCounter =
-        document.getElementById("lightboxCounter");
-
-    const closeLightbox =
-        document.getElementById("closeLightbox");
-
-    const previousPhoto =
-        document.getElementById("previousPhoto");
-
-    const nextPhoto =
-        document.getElementById("nextPhoto");
-
-
-    function openLightbox(index) {
-
-        const photos =
-            currentAlbum?.photos || [];
-
-
-        if (!photos[index]) {
-
-            return;
-
-        }
-
-
-        currentLightboxIndex =
-            index;
-
-
-        lightboxImage.src =
-            photos[index].data;
-
-
-        lightboxImage.alt =
-            photos[index].name || "Photo";
-
-
-        lightboxCounter.textContent =
-            `${index + 1} / ${photos.length}`;
-
-
-        lightbox.classList.add(
-            "open"
-        );
-
-
-        document.body.classList.add(
-            "lightbox-open"
-        );
-
-    }
-
-
-    function closeLightboxWindow() {
-
-        lightbox.classList.remove(
-            "open"
-        );
-
-
-        document.body.classList.remove(
-            "lightbox-open"
-        );
-
-    }
-
-
-    function showPreviousPhoto() {
-
-        const photos =
-            currentAlbum?.photos || [];
-
-
-        if (photos.length === 0) {
-
-            return;
-
-        }
-
-
-        currentLightboxIndex--;
-
-        if (currentLightboxIndex < 0) {
-
-            currentLightboxIndex =
-                photos.length - 1;
-
-        }
-
-
-        updateLightbox();
-
-    }
-
-
-    function showNextPhoto() {
-
-        const photos =
-            currentAlbum?.photos || [];
-
-
-        if (photos.length === 0) {
-
-            return;
-
-        }
-
-
-        currentLightboxIndex++;
-
-        if (
-            currentLightboxIndex >=
-            photos.length
-        ) {
-
-            currentLightboxIndex = 0;
-
-        }
-
-
-        updateLightbox();
-
-    }
-
-
-    function updateLightbox() {
-
-        const photos =
-            currentAlbum?.photos || [];
-
-
-        const photo =
-            photos[currentLightboxIndex];
-
-
-        if (!photo) {
-
-            return;
-
-        }
-
-
-        lightboxImage.src =
-            photo.data;
-
-
-        lightboxImage.alt =
-            photo.name || "Photo";
-
-
-        lightboxCounter.textContent =
-            `${currentLightboxIndex + 1} / ${photos.length}`;
-
-    }
-
-
-    closeLightbox.addEventListener(
-        "click",
-        closeLightboxWindow
-    );
-
-
-    previousPhoto.addEventListener(
-        "click",
-        showPreviousPhoto
-    );
-
-
-    nextPhoto.addEventListener(
-        "click",
-        showNextPhoto
-    );
-
-
-    // Click outside image
-
-    lightbox.addEventListener(
-        "click",
-        event => {
-
             if (
-                event.target === lightbox
+                Number.isNaN(
+                    date.getTime()
+                )
             ) {
 
-                closeLightboxWindow();
-
-            }
-
-        }
-    );
-
-
-    // Keyboard controls
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                !lightbox.classList.contains("open")
-            ) {
-
-                return;
-
+                return dateString;
             }
 
 
-            if (event.key === "Escape") {
-
-                closeLightboxWindow();
-
-            }
-
-
-            if (event.key === "ArrowLeft") {
-
-                showPreviousPhoto();
-
-            }
-
-
-            if (event.key === "ArrowRight") {
-
-                showNextPhoto();
-
-            }
-
-        }
-    );
-
-
-    // =====================================================
-    // ERROR
-    // =====================================================
-
-    function showError() {
-
-        photoGrid.style.display =
-            "none";
-
-        emptyState.style.display =
-            "none";
-
-        errorState.style.display =
-            "flex";
-
-        albumTitle.textContent =
-            "Gallery Not Found";
-
-    }
-
-
-    // =====================================================
-    // SECURITY
-    // =====================================================
-
-    function escapeHTML(value) {
-
-        return String(value)
-
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
+            return date.toLocaleDateString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
             );
+        }
+
+
+        /* =================================================
+           SHOW ERROR
+        ================================================= */
+
+        function showError() {
+
+            if (photoGrid) {
+
+                photoGrid.innerHTML = "";
+            }
+            if (emptyState) {
+                emptyState.style.display =
+                    "none";
+            }
+            if (errorState) {
+
+                errorState.style.display =
+                    "block";
+            }
+            if (purchaseBar) {
+
+                purchaseBar.style.display =
+                    "none";
+                purchaseBar.classList.remove(
+                    "active"
+                );
+            }
+        }
+
+
+        /* =================================================
+           ESCAPE HTML
+        ================================================= */
+
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+        }
 
     }
-
-
-    // =====================================================
-    // START
-    // =====================================================
-
-    loadAlbum();
-
-
-    console.log(
-        "ShotMarket Gallery initialized successfully."
-    );
-
-});
+);
