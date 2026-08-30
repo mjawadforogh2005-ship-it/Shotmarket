@@ -143,12 +143,6 @@ document.addEventListener(
                             ".auth-submit"
                         );
 
-
-
-                    /* =========================================
-                       VALIDATION
-                    ========================================= */
-
                     if (!fullName) {
 
                         alert(
@@ -202,13 +196,6 @@ document.addEventListener(
 
                         return;
                     }
-
-
-
-                    /* =========================================
-                       BUTTON LOADING
-                    ========================================= */
-
                     if (submitBtn) {
 
                         submitBtn.disabled =
@@ -218,15 +205,7 @@ document.addEventListener(
                             'Creating Account... <i class="fa-solid fa-spinner fa-spin"></i>';
 
                     }
-
-
-
                     try {
-
-
-                        /* =====================================
-                           SUPABASE REGISTRATION
-                        ===================================== */
 
                         const {
                             data,
@@ -278,63 +257,36 @@ document.addEventListener(
                             return;
 
                         }
-
-
-
-                        /* =====================================
-                           SESSION CREATED IMMEDIATELY
-                        ===================================== */
-
                         if (
                             data.user &&
                             data.session
                         ) {
-
                             alert(
                                 "Account created successfully!"
                             );
-
-
                             window.location.href =
                                 "dashboard.html";
-
-
                             return;
-
                         }
-
-
-
                         throw new Error(
                             "Account creation returned an unexpected response."
                         );
-
-
                     } catch (err) {
-
                         console.error(
                             "Registration error:",
                             err
                         );
-
-
                         alert(
                             "Registration failed: " +
                             err.message
                         );
-
-
                     } finally {
-
                         if (submitBtn) {
-
                             submitBtn.disabled =
                                 false;
-
                             submitBtn.innerHTML =
                                 'Create Account <i class="fa-solid fa-arrow-right"></i>';
-
-                        }
+                       }
 
                     }
 
@@ -342,19 +294,10 @@ document.addEventListener(
             );
 
         }
-
-
-
-        /* =====================================================
-           LOGIN FORM
-        ===================================================== */
-
         const loginForm =
             document.getElementById(
                 "loginForm"
             );
-
-
         if (loginForm) {
 
             loginForm.addEventListener(
@@ -430,12 +373,6 @@ document.addEventListener(
 
 
                     try {
-
-
-                        /* =====================================
-                           SUPABASE LOGIN
-                        ===================================== */
-
                         const {
                             data,
                             error
@@ -472,31 +409,18 @@ document.addEventListener(
                             "Login successful:",
                             data.user
                         );
-
-
-
-                        /* =====================================
-                           GO TO DASHBOARD
-                        ===================================== */
-
                         window.location.href =
                             "dashboard.html";
-
-
                     } catch (err) {
 
                         console.error(
                             "Login error:",
                             err
                         );
-
-
                         alert(
                             "Login failed: " +
                             err.message
                         );
-
-
                     } finally {
 
                         if (submitBtn) {
