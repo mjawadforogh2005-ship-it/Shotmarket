@@ -1,13 +1,3 @@
-/* =========================================================
-   SHOTMARKET - AUTHENTICATION SYSTEM
-   Supabase Authentication
-   ========================================================= */
-
-
-/* =========================================================
-   REGISTER
-========================================================= */
-
 async function registerUser(
     fullName,
     email,
@@ -79,12 +69,6 @@ async function registerUser(
     }
 }
 
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
 async function loginUser(
     email,
     password
@@ -147,13 +131,6 @@ async function loginUser(
         };
     }
 }
-
-
-
-/* =========================================================
-   GET CURRENT USER
-========================================================= */
-
 async function getCurrentUser() {
 
     try {
@@ -189,12 +166,6 @@ async function getCurrentUser() {
         return null;
     }
 }
-
-
-
-/* =========================================================
-   GET CURRENT SESSION
-========================================================= */
 
 async function getCurrentSession() {
 
@@ -232,12 +203,6 @@ async function getCurrentSession() {
     }
 }
 
-
-
-/* =========================================================
-   REQUIRE LOGIN
-========================================================= */
-
 async function requireLogin() {
 
     const session =
@@ -261,12 +226,6 @@ async function requireLogin() {
 
     return session.user;
 }
-
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
 
 async function logoutUser() {
 
@@ -311,12 +270,6 @@ async function logoutUser() {
         return false;
     }
 }
-
-
-
-/* =========================================================
-   AUTH STATE LISTENER
-========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
     function (

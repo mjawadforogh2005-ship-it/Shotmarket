@@ -1,9 +1,3 @@
-/* =========================================================
-   SHOTMARKET
-   REAL PHOTOGRAPHER DASHBOARD
-   Supabase Version
-========================================================= */
-
 const dashboardSupabase = supabaseClient;
 
 
@@ -14,12 +8,6 @@ document.addEventListener(
         console.log(
             "ShotMarket Dashboard Loaded 🚀"
         );
-
-
-        /* =====================================================
-           1. CHECK LOGIN
-        ===================================================== */
-
         const {
             data: sessionData,
             error: sessionError
@@ -63,26 +51,11 @@ document.addEventListener(
             user
         );
 
-
-        /* =====================================================
-           2. LOAD PROFILE
-        ===================================================== */
-
         await loadProfile(user.id);
-
-
-        /* =====================================================
-           3. LOAD DASHBOARD DATA
-        ===================================================== */
 
         await loadDashboardData(
             user.id
         );
-
-
-        /* =====================================================
-           4. LOGOUT
-        ===================================================== */
 
         const logoutButton =
             document.getElementById(
@@ -123,11 +96,6 @@ document.addEventListener(
             );
         }
 
-
-        /* =====================================================
-           5. CREATE NEW ALBUM
-        ===================================================== */
-
         const createAlbumButton =
             document.getElementById(
                 "createAlbumButton"
@@ -148,11 +116,6 @@ document.addEventListener(
 
     }
 );
-
-
-/* =========================================================
-   LOAD PROFILE
-========================================================= */
 
 async function loadProfile(
     userId
@@ -192,10 +155,6 @@ async function loadProfile(
             "Photographer";
 
 
-        /* ---------------------------------------------
-           Welcome heading
-        --------------------------------------------- */
-
         const welcomeName =
             document.getElementById(
                 "welcomeName"
@@ -207,11 +166,6 @@ async function loadProfile(
             welcomeName.textContent =
                 fullName;
         }
-
-
-        /* ---------------------------------------------
-           Navbar name
-        --------------------------------------------- */
 
         const navUserName =
             document.getElementById(
@@ -225,10 +179,6 @@ async function loadProfile(
                 fullName;
         }
 
-
-        /* ---------------------------------------------
-           Avatar
-        --------------------------------------------- */
 
         const avatar =
             document.getElementById(
@@ -262,20 +212,11 @@ async function loadProfile(
     }
 }
 
-
-/* =========================================================
-   LOAD DASHBOARD DATA
-========================================================= */
-
 async function loadDashboardData(
     userId
 ) {
 
     try {
-
-        /* =================================================
-           ALBUMS
-        ================================================= */
 
         const {
             data: albums,
@@ -304,12 +245,6 @@ async function loadDashboardData(
 
         const albumList =
             albums || [];
-
-
-        /* =================================================
-           PHOTOS
-        ================================================= */
-
         const {
             data: photos,
             error: photosError
@@ -331,11 +266,6 @@ async function loadDashboardData(
 
         const photoList =
             photos || [];
-
-
-        /* =================================================
-           PAYMENTS
-        ================================================= */
 
         const {
             data: payments,
@@ -361,11 +291,6 @@ async function loadDashboardData(
 
         const paymentList =
             payments || [];
-
-
-        /* =================================================
-           CALCULATE STATISTICS
-        ================================================= */
 
         const totalAlbums =
             albumList.length;
@@ -406,12 +331,6 @@ async function loadDashboardData(
                 },
                 0
             );
-
-
-        /* =================================================
-           UPDATE STATISTICS
-        ================================================= */
-
         setText(
             "totalAlbums",
             totalAlbums
@@ -437,11 +356,6 @@ async function loadDashboardData(
             )
         );
 
-
-        /* =================================================
-           RECENT ALBUMS
-        ================================================= */
-
         renderRecentAlbums(
             albumList,
             photoList
@@ -451,12 +365,6 @@ async function loadDashboardData(
         setupDashboardQRCode(
             albumList[0]
         );
-
-
-        /* =================================================
-           UPDATE EMPTY STATE
-        ================================================= */
-
         const emptyState =
             document.getElementById(
                 "emptyAlbums"
@@ -485,11 +393,6 @@ async function loadDashboardData(
         );
     }
 }
-
-
-/* =========================================================
-   RENDER RECENT ALBUMS
-========================================================= */
 
 function renderRecentAlbums(
     albums,
@@ -657,12 +560,6 @@ function renderRecentAlbums(
             );
         }
     );
-
-
-    /* =====================================================
-       OPEN ALBUM BUTTONS
-    ===================================================== */
-
     const openButtons =
         container.querySelectorAll(
             ".album-open"
@@ -803,12 +700,6 @@ function escapeHTML(
             "&#039;"
         );
 }
-
-
-/* =========================================================
-   DASHBOARD QR CODE
-========================================================= */
-
 function setupDashboardQRCode(
     latestAlbum
 ) {
@@ -817,14 +708,10 @@ function setupDashboardQRCode(
         document.getElementById(
             "downloadQR"
         );
-
-
     const copyButton =
         document.getElementById(
             "copyGalleryBtn"
         );
-
-
     if (!latestAlbum?.id) {
 
         if (downloadButton) {
@@ -832,14 +719,11 @@ function setupDashboardQRCode(
             downloadButton.disabled =
                 true;
         }
-
-
         if (copyButton) {
 
             copyButton.disabled =
                 true;
         }
-
 
         return;
     }
@@ -848,11 +732,11 @@ function setupDashboardQRCode(
     if (typeof generateAlbumQRCode === "function") {
 
         generateAlbumQRCode(
-            latestAlbum.id
+            latestAlbum.id,
+            "qr-code",
+            latestAlbum.gallery_token
         );
     }
-
-
     if (downloadButton) {
 
         downloadButton.addEventListener(
@@ -865,8 +749,6 @@ function setupDashboardQRCode(
             }
         );
     }
-
-
     if (copyButton) {
 
         copyButton.addEventListener(
@@ -874,7 +756,8 @@ function setupDashboardQRCode(
             function () {
 
                 copyGalleryURL(
-                    latestAlbum.id
+                    latestAlbum.id,
+                    latestAlbum.gallery_token
                 );
             }
         );

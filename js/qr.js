@@ -7,10 +7,15 @@
 /**
  * Generate a customer gallery URL
  */
-function generateGalleryURL(albumId) {
+function generateGalleryURL(albumId, galleryToken) {
 
     if (!albumId) {
         console.error("No album ID provided.");
+        return "";
+    }
+
+    if (!galleryToken) {
+        console.error("No gallery token provided.");
         return "";
     }
 
@@ -19,14 +24,14 @@ function generateGalleryURL(albumId) {
         .slice(0, -1)
         .join("/");
 
-    return `${baseURL}/gallery.html?album=${encodeURIComponent(albumId)}`;
+    return `${baseURL}/gallery.html?album=${encodeURIComponent(albumId)}&token=${encodeURIComponent(galleryToken)}`;
 }
 
 
 /**
  * Generate QR Code
  */
-function generateAlbumQRCode(albumId, elementId = "qr-code") {
+function generateAlbumQRCode(albumId, elementId = "qr-code", galleryToken = null) {
 
     const qrContainer = document.getElementById(elementId);
 
@@ -40,7 +45,12 @@ function generateAlbumQRCode(albumId, elementId = "qr-code") {
         return;
     }
 
-    const galleryURL = generateGalleryURL(albumId);
+    if (!galleryToken) {
+        console.error("Cannot generate QR without gallery token.");
+        return;
+    }
+
+    const galleryURL = generateGalleryURL(albumId, galleryToken);
 
     qrContainer.innerHTML = "";
 
@@ -91,9 +101,9 @@ function downloadQRCode(filename = "shotmarket-qr-code.png") {
 /**
  * Copy gallery URL
  */
-function copyGalleryURL(albumId) {
+function copyGalleryURL(albumId, galleryToken) {
 
-    const galleryURL = generateGalleryURL(albumId);
+    const galleryURL = generateGalleryURL(albumId, galleryToken);
 
     if (!galleryURL) {
         return;

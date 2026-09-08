@@ -4,7 +4,63 @@
    Supabase Connected Version
 ========================================================= */
 
-import { supabase } from "./supabaseClient.js";
+import {
+    createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+
+const SUPABASE_URL =
+    "https://xplcaiygifwnxyevvqsr.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_16S4x_HPLxfsUk1RTgR4Qw_gnvlyqD_";
+
+const supabase =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+async function getCustomerSession() {
+    const {
+        data: sessionData,
+        error: sessionError
+    } = await supabase.auth.getSession();
+
+    if (sessionError) {
+        throw sessionError;
+    }
+
+    if (sessionData?.session) {
+        const user = sessionData.session.user;
+
+        if (user?.is_anonymous) {
+            return sessionData.session;
+        }
+
+        throw new Error(
+            "Customer checkout requires an anonymous session."
+        );
+    }
+
+    const {
+        data,
+        error
+    } = await supabase.auth.signInAnonymously();
+
+    if (error) {
+        throw error;
+    }
+
+    if (!data?.session) {
+        throw new Error(
+            "Could not create customer session."
+        );
+    }
+
+    return data.session;
+}
 
 
 document.addEventListener(
@@ -89,52 +145,17 @@ document.addEventListener(
         );
 
 
-        /* =====================================================
-           CHECK USER
-        ===================================================== */
+        let customerSession;
 
-        const {
-            data: userData,
-            error: userError
-        } =
-            await supabase.auth.getUser();
-
-
-        if (userError) {
-
-            console.error(
-                "Could not get current user:",
-                userError
-            );
-        }
-
-
-        const currentUser =
-            userData?.user || null;
-
-
-        console.log(
-            "Current user:",
-            currentUser
-        );
-
-
-        /*
-         * Payment creation is protected by RLS.
-         * Therefore the customer must be logged in.
-         */
-
-        if (!currentUser) {
-
-            alert(
-                "Please log in before continuing to payment."
-            );
-
-            window.location.href =
-                "login.html";
-
+        try {
+            customerSession = await getCustomerSession();
+        } catch (error) {
+            console.error("Could not create customer session:", error);
+            alert("Could not start the secure customer session. Please try again.");
             return;
         }
+
+        const currentUser = customerSession.user;
 
 
         /* =====================================================
@@ -578,65 +599,45 @@ document.addEventListener(
 
                     try {
 
-                        /* -------------------------------------
-                           CREATE PAYMENT RECORD
-                        ------------------------------------- */
+                        const galleryToken =
+                            new URLSearchParams(
+                                window.location.search
+                            ).get("token") ||
+                            sessionStorage.getItem(
+                                "shotmarket_gallery_token"
+                            );
 
-                        const paymentRecord = {
-
-                            user_id:
-                                currentUser.id,
-
-                            album_id:
-                                albumId,
-
-                            amount:
-                                totalAmount,
-
-                            currency:
-                                "KZT",
-
-                            status:
-                                "pending",
-
-                            payment_method:
-                                "bank_transfer",
-
-                            selected_photos:
-                                selectedPhotoIds,
-
-                            created_at:
-                                new Date().toISOString(),
-
-                            updated_at:
-                                new Date().toISOString()
-                        };
-
-
-                        console.log(
-                            "Creating payment:",
-                            paymentRecord
-                        );
-
-
-                        const {
-                            data: payment,
-                            error: paymentError
-                        } =
-                            await supabase
-                                .from("payments")
-                                .insert(
-                                    paymentRecord
-                                )
-                                .select()
-                                .single();
-
-
-                        if (paymentError) {
-
-                            throw paymentError;
+                        if (!galleryToken) {
+                            throw new Error(
+                                "Gallery token is missing."
+                            );
                         }
 
+                        const {
+                            data,
+                            error
+                        } = await supabase.functions.invoke(
+                            "create-payment",
+                            {
+                                body: {
+                                    albumId,
+                                    galleryToken,
+                                    selectedPhotoIds
+                                }
+                            }
+                        );
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (!data?.success || !data?.payment) {
+                            throw new Error(
+                                data?.error || "Could not create payment."
+                            );
+                        }
+
+                        const payment = data.payment;
 
                         console.log(
                             "Payment successfully created:",
@@ -644,39 +645,41 @@ document.addEventListener(
                         );
 
 
-                        /* -------------------------------------
-                           SAVE PAYMENT ID
-                        ------------------------------------- */
-
                         sessionStorage.setItem(
                             "shotmarket_payment_id",
                             payment.id
                         );
 
-
                         sessionStorage.setItem(
-                            "shotmarket_current_album",
-                            albumId
+                            "shotmarket_payment_album",
+                            payment.album_id
                         );
 
+                        sessionStorage.setItem(
+                            "shotmarket_payment_status",
+                            payment.status
+                        );
 
                         sessionStorage.setItem(
                             "shotmarket_selected_photos",
                             JSON.stringify(
-                                selectedPhotoIds
+                                payment.selected_photos
                             )
                         );
 
+                        const confirmedAmount =
+                            Number(payment.amount);
 
-                        sessionStorage.setItem(
-                            "shotmarket_payment_status",
-                            "pending"
-                        );
+                        const paymentAmountElement =
+                            document.getElementById(
+                                "paymentAmount"
+                            );
 
+                        if (paymentAmountElement) {
+                            paymentAmountElement.textContent =
+                                `${confirmedAmount.toLocaleString()} KZT`;
+                        }
 
-                        /* -------------------------------------
-                           SHOW SUCCESS
-                        ------------------------------------- */
 
                         showSuccessModal();
 
@@ -742,6 +745,232 @@ document.addEventListener(
 
     }
 );
+
+
+async function checkPaymentStatus() {
+    const paymentId =
+        sessionStorage.getItem("shotmarket_payment_id");
+
+    const albumId =
+        sessionStorage.getItem("shotmarket_payment_album");
+
+    if (!paymentId || !albumId) {
+        return;
+    }
+
+    const {
+        data: payment,
+        error
+    } = await supabase
+        .from("payments")
+        .select(`
+            id,
+            album_id,
+            status,
+            selected_photos
+        `)
+        .eq("id", paymentId)
+        .eq("album_id", albumId)
+        .single();
+
+    if (error || !payment) {
+        console.error(
+            "Could not check payment:",
+            error
+        );
+        return;
+    }
+
+    sessionStorage.setItem(
+        "shotmarket_payment_status",
+        payment.status
+    );
+
+    updatePaymentStatusUI(payment.status);
+
+    if (payment.status === "paid") {
+        showDownloadSection(
+            payment.id,
+            payment.album_id,
+            payment.selected_photos
+        );
+    }
+}
+
+
+function updatePaymentStatusUI(status) {
+    const statusElement =
+        document.getElementById("paymentStatus");
+
+    if (!statusElement) {
+        return;
+    }
+
+    if (status === "pending") {
+        statusElement.textContent =
+            "Payment submitted — waiting for photographer verification.";
+    }
+
+    if (status === "paid") {
+        statusElement.textContent =
+            "Payment approved — your photos are ready.";
+    }
+}
+
+
+function showDownloadSection(
+    paymentId,
+    albumId,
+    selectedPhotoIds
+) {
+    const section =
+        document.getElementById("downloadSection");
+
+    if (!section) {
+        return;
+    }
+
+    section.style.display = "block";
+
+    const downloadList =
+        document.getElementById("downloadList");
+
+    if (!downloadList) {
+        return;
+    }
+
+    downloadList.innerHTML = `
+        <button
+            id="downloadPhotosBtn"
+            class="primary-btn"
+        >
+            Download My Photos
+        </button>
+
+        <div
+            id="downloadResults"
+            style="margin-top:20px;"
+        ></div>
+    `;
+
+    document
+        .getElementById("downloadPhotosBtn")
+        .addEventListener(
+            "click",
+            () =>
+                requestDownloads(
+                    paymentId,
+                    albumId,
+                    selectedPhotoIds
+                )
+        );
+}
+
+
+async function requestDownloads(
+    paymentId,
+    albumId,
+    selectedPhotoIds
+) {
+    const button =
+        document.getElementById(
+            "downloadPhotosBtn"
+        );
+
+    const results =
+        document.getElementById(
+            "downloadResults"
+        );
+
+    if (!button || !results) {
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Preparing downloads...";
+
+    results.innerHTML = "";
+
+    try {
+        const {
+            data,
+            error
+        } = await supabase.functions.invoke(
+            "download-access",
+            {
+                body: {
+                    paymentId,
+                    albumId,
+                    photoIds: selectedPhotoIds
+                }
+            }
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        if (
+            !data ||
+            !data.success ||
+            !Array.isArray(data.downloads)
+        ) {
+            throw new Error(
+                data?.error ||
+                "Could not prepare downloads."
+            );
+        }
+
+        results.innerHTML = data.downloads
+            .map((download) => `
+                <div class="download-item">
+                    <span>
+                        ${escapeHtml(
+                            download.file_name
+                        )}
+                    </span>
+
+                    <a
+                        href="${download.downloadUrl}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Download
+                    </a>
+                </div>
+            `)
+            .join("");
+
+        button.textContent =
+            "Downloads Ready";
+    } catch (error) {
+        console.error(
+            "Download error:",
+            error
+        );
+
+        results.innerHTML = `
+            <p>
+                Could not prepare your downloads.
+                Please try again.
+            </p>
+        `;
+
+        button.disabled = false;
+        button.textContent =
+            "Download My Photos";
+    }
+}
+
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
 
 
 /* =========================================================
@@ -902,3 +1131,12 @@ function formatDate(
         }
     );
 }
+
+
+checkPaymentStatus();
+
+const paymentStatusInterval =
+    setInterval(
+        checkPaymentStatus,
+        10000
+    );

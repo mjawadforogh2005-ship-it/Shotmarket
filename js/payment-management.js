@@ -1,4 +1,19 @@
-import { supabase } from "./supabaseClient.js";
+import {
+    createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+
+const SUPABASE_URL =
+    "https://xplcaiygifwnxyevvqsr.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_16S4x_HPLxfsUk1RTgR4Qw_gnvlyqD_";
+
+const supabase =
+    createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
 
 
 document.addEventListener(

@@ -1,15 +1,6 @@
-/* =========================================================
-   SHOTMARKET - DATABASE GALLERY
-   Gallery → Supabase Albums → Photos → Storage
-   ========================================================= */
-
-import { createClient } from
-    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-
-/* =========================================================
-   SUPABASE
-   ========================================================= */
+import {
+    createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const SUPABASE_URL =
     "https://xplcaiygifwnxyevvqsr.supabase.co";
@@ -23,11 +14,6 @@ const supabase =
         SUPABASE_KEY
     );
 
-
-/* =========================================================
-   PAGE START
-   ========================================================= */
-
 document.addEventListener(
     "DOMContentLoaded",
     async () => {
@@ -36,79 +22,105 @@ document.addEventListener(
             "ShotMarket Gallery System Loaded 🚀"
         );
 
-
-        /* =================================================
-           ELEMENTS
-        ================================================= */
-
         const albumTitle =
-            document.getElementById("albumTitle");
+            document.getElementById(
+                "albumTitle"
+            );
 
         const albumDescription =
-            document.getElementById("albumDescription");
+            document.getElementById(
+                "albumDescription"
+            );
 
         const albumDate =
-            document.getElementById("albumDate");
+            document.getElementById(
+                "albumDate"
+            );
 
         const albumLocation =
-            document.getElementById("albumLocation");
+            document.getElementById(
+                "albumLocation"
+            );
 
         const albumPhotoCount =
-            document.getElementById("albumPhotoCount");
+            document.getElementById(
+                "albumPhotoCount"
+            );
 
         const photoGrid =
-            document.getElementById("photoGrid");
+            document.getElementById(
+                "photoGrid"
+            );
 
         const emptyState =
-            document.getElementById("emptyState");
+            document.getElementById(
+                "emptyState"
+            );
 
         const errorState =
-            document.getElementById("errorState");
+            document.getElementById(
+                "errorState"
+            );
 
         const selectAllBtn =
-            document.getElementById("selectAllBtn");
+            document.getElementById(
+                "selectAllBtn"
+            );
 
         const selectedCounter =
-            document.getElementById("selectedCounter");
+            document.getElementById(
+                "selectedCounter"
+            );
 
         const purchaseBar =
-            document.getElementById("purchaseBar");
+            document.getElementById(
+                "purchaseBar"
+            );
 
         const purchaseCount =
-            document.getElementById("purchaseCount");
+            document.getElementById(
+                "purchaseCount"
+            );
 
         const continuePaymentBtn =
             document.getElementById(
                 "continuePaymentBtn"
             );
 
-
-        /* =================================================
-           LIGHTBOX ELEMENTS
-        ================================================= */
+        const downloadPurchasedBtn =
+            document.getElementById(
+                "downloadPurchasedBtn"
+            );
 
         const lightbox =
-            document.getElementById("lightbox");
+            document.getElementById(
+                "lightbox"
+            );
 
         const lightboxImage =
-            document.getElementById("lightboxImage");
+            document.getElementById(
+                "lightboxImage"
+            );
 
         const closeLightbox =
-            document.getElementById("closeLightbox");
+            document.getElementById(
+                "closeLightbox"
+            );
 
         const previousPhoto =
-            document.getElementById("previousPhoto");
+            document.getElementById(
+                "previousPhoto"
+            );
 
         const nextPhoto =
-            document.getElementById("nextPhoto");
+            document.getElementById(
+                "nextPhoto"
+            );
 
         const lightboxCounter =
-            document.getElementById("lightboxCounter");
-
-
-        /* =================================================
-           STATE
-        ================================================= */
+            document.getElementById(
+                "lightboxCounter"
+            );
 
         let album = null;
 
@@ -118,199 +130,230 @@ document.addEventListener(
 
         let currentLightboxIndex = 0;
 
-
-        /* =================================================
-           GET ALBUM ID FROM URL
-        ================================================= */
-
         const urlParams =
             new URLSearchParams(
                 window.location.search
             );
 
-        let albumId =
-            urlParams.get("album");
+        const albumId =
+            urlParams.get(
+                "album"
+            );
 
-
-        if (!albumId) {
-
-            albumId =
-                sessionStorage.getItem(
-                    "shotmarket_current_album"
-                );
-        }
-
+        const galleryToken =
+            urlParams.get(
+                "token"
+            );
 
         console.log(
             "Gallery Album ID:",
             albumId
         );
 
+        console.log(
+            "Gallery token present:",
+            Boolean(
+                galleryToken
+            )
+        );
 
-        /* =================================================
-           VALIDATE ALBUM ID
-        ================================================= */
-
-        if (!albumId) {
+        if (
+            !albumId ||
+            !galleryToken
+        ) {
 
             showError();
 
             return;
         }
 
-
-        /* =================================================
-           LOAD GALLERY
-        ================================================= */
-
         await loadGallery();
 
+        async function requestPurchasedDownloads() {
 
-        /* =================================================
-           LOAD GALLERY FUNCTION
-        ================================================= */
+            try {
+
+                const sessionResult =
+                    await supabase.auth.getSession();
+
+                const session =
+                    sessionResult?.data?.session;
+
+                if (!session) {
+
+                    alert(
+                        "Please log in to download your purchased photos."
+                    );
+
+                    return;
+                }
+
+                const response =
+                    await fetch(
+                        `${SUPABASE_URL}/functions/v1/download-access`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+
+                                "apikey":
+                                    SUPABASE_KEY,
+
+                                "Authorization":
+                                    `Bearer ${session.access_token}`
+                            },
+
+                            body: JSON.stringify({
+                                albumId:
+                                    albumId,
+
+                                photoIds:
+                                    selectedPhotos
+                            })
+                        }
+                    );
+
+                const result =
+                    await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Download authorization failed."
+                    );
+                }
+
+                if (
+                    !result.downloads ||
+                    result.downloads.length === 0
+                ) {
+
+                    throw new Error(
+                        "No purchased downloads are available."
+                    );
+                }
+
+                result.downloads.forEach(
+                    (download, index) => {
+
+                        setTimeout(
+                            () => {
+
+                                const link =
+                                    document.createElement(
+                                        "a"
+                                    );
+
+                                link.href =
+                                    download.downloadUrl;
+
+                                link.download =
+                                    download.fileName;
+
+                                link.target =
+                                    "_blank";
+
+                                document.body.appendChild(
+                                    link
+                                );
+
+                                link.click();
+
+                                link.remove();
+
+                            },
+                            index * 700
+                        );
+                    }
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Download error:",
+                    error
+                );
+
+                alert(
+                    error.message ||
+                    "Could not download your photos."
+                );
+            }
+        }
 
         async function loadGallery() {
 
             try {
 
-                /* =========================================
-                   STEP 1
-                   LOAD ALBUM
-                ========================================= */
+                const functionUrl =
+                    `${SUPABASE_URL}/functions/v1/gallery-access`;
 
-                const {
-                    data: albumData,
-                    error: albumError
-                } = await supabase
-                    .from("albums")
-                    .select("*")
-                    .eq(
-                        "id",
-                        albumId
-                    )
-                    .single();
+                const response =
+                    await fetch(
+                        functionUrl,
+                        {
+                            method: "POST",
 
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
 
-                if (albumError) {
+                                "apikey":
+                                    SUPABASE_KEY
+                            },
 
-                    console.error(
-                        "Album loading error:",
-                        albumError
+                            body: JSON.stringify({
+                                albumId:
+                                    albumId,
+
+                                galleryToken:
+                                    galleryToken
+                            })
+                        }
                     );
 
-                    throw albumError;
+                const result =
+                    await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Could not load gallery."
+                    );
                 }
 
+                if (
+                    !result.album
+                ) {
 
-                if (!albumData) {
-
-                    showError();
-
-                    return;
+                    throw new Error(
+                        "Gallery not found."
+                    );
                 }
-
 
                 album =
-                    albumData;
+                    result.album;
 
+                photos =
+                    result.photos || [];
 
                 console.log(
-                    "Album loaded:",
+                    "Secure gallery loaded:",
                     album
                 );
 
-
-                /* =========================================
-                   STEP 2
-                   DISPLAY ALBUM INFORMATION
-                ========================================= */
-
-                displayAlbum();
-
-
-                /* =========================================
-                   STEP 3
-                   LOAD PHOTOS
-                ========================================= */
-
-                const {
-                    data: photoData,
-                    error: photoError
-                } = await supabase
-                    .from("photos")
-                    .select("*")
-                    .eq(
-                        "album_id",
-                        albumId
-                    )
-                    .order(
-                        "created_at",
-                        {
-                            ascending: true
-                        }
-                    );
-
-
-                if (photoError) {
-
-                    console.error(
-                        "Photo loading error:",
-                        photoError
-                    );
-
-                    throw photoError;
-                }
-
-
-                photos =
-                    photoData || [];
-
-
                 console.log(
-                    "Photos loaded:",
+                    "Secure photos loaded:",
                     photos
                 );
 
-
-                /* =========================================
-                   STEP 4
-                   BUILD STORAGE URLS
-                ========================================= */
-
-                photos =
-                    photos.map(
-                        photo => {
-
-                            const {
-                                data
-                            } =
-                                supabase
-                                    .storage
-                                    .from(
-                                        "shotmarket-photos"
-                                    )
-                                    .getPublicUrl(
-                                        photo.storage_path
-                                    );
-
-
-                            return {
-                                ...photo,
-                                displayUrl:
-                                    data.publicUrl
-                            };
-                        }
-                    );
-
-
-                /* =========================================
-                   STEP 5
-                   DISPLAY PHOTOS
-                ========================================= */
+                displayAlbum();
 
                 displayPhotos();
-
 
             } catch (error) {
 
@@ -323,17 +366,11 @@ document.addEventListener(
             }
         }
 
-
-        /* =================================================
-           DISPLAY ALBUM
-        ================================================= */
-
         function displayAlbum() {
 
             if (!album) {
                 return;
             }
-
 
             if (albumTitle) {
 
@@ -342,14 +379,12 @@ document.addEventListener(
                     "Untitled Album";
             }
 
-
             if (albumDescription) {
 
                 albumDescription.textContent =
                     album.description ||
                     "Your photographer has prepared your private photo gallery.";
             }
-
 
             if (albumDate) {
 
@@ -359,14 +394,12 @@ document.addEventListener(
                     );
             }
 
-
             if (albumLocation) {
 
                 albumLocation.textContent =
                     album.location ||
                     "—";
             }
-
 
             if (albumPhotoCount) {
 
@@ -379,20 +412,14 @@ document.addEventListener(
             }
         }
 
-
-        /* =================================================
-           DISPLAY PHOTOS
-        ================================================= */
-
         function displayPhotos() {
 
             if (!photoGrid) {
                 return;
             }
 
-
-            photoGrid.innerHTML = "";
-
+            photoGrid.innerHTML =
+                "";
 
             if (!photos.length) {
 
@@ -406,11 +433,14 @@ document.addEventListener(
 
                     purchaseBar.style.display =
                         "none";
+
+                    purchaseBar.classList.remove(
+                        "active"
+                    );
                 }
 
                 return;
             }
-
 
             if (emptyState) {
 
@@ -418,34 +448,33 @@ document.addEventListener(
                     "none";
             }
 
-
             if (purchaseBar) {
 
                 purchaseBar.style.display =
                     "flex";
+
                 purchaseBar.classList.toggle(
                     "active",
                     selectedPhotos.length > 0
                 );
             }
 
-
             photos.forEach(
-                (photo, index) => {
+                (
+                    photo,
+                    index
+                ) => {
 
                     const card =
                         document.createElement(
                             "div"
                         );
 
-
                     card.className =
                         "photo-card";
 
-
                     card.dataset.photoId =
                         photo.id;
-
 
                     card.innerHTML = `
 
@@ -493,24 +522,16 @@ document.addEventListener(
 
                     `;
 
-
                     photoGrid.appendChild(
                         card
                     );
                 }
             );
 
-
             attachPhotoEvents();
-
 
             updateSelection();
         }
-
-
-        /* =================================================
-           PHOTO EVENTS
-        ================================================= */
 
         function attachPhotoEvents() {
 
@@ -518,7 +539,6 @@ document.addEventListener(
                 photoGrid.querySelectorAll(
                     ".photo-checkbox"
                 );
-
 
             checkboxes.forEach(
                 checkbox => {
@@ -529,7 +549,6 @@ document.addEventListener(
 
                             const photoId =
                                 this.dataset.photoId;
-
 
                             if (
                                 this.checked
@@ -551,10 +570,10 @@ document.addEventListener(
                                 selectedPhotos =
                                     selectedPhotos.filter(
                                         id =>
-                                            id !== photoId
+                                            id !==
+                                            photoId
                                     );
                             }
-
 
                             updateSelection();
                         }
@@ -562,19 +581,19 @@ document.addEventListener(
                 }
             );
 
-
             const previewButtons =
                 photoGrid.querySelectorAll(
                     ".preview-photo-btn"
                 );
-
 
             previewButtons.forEach(
                 button => {
 
                     button.addEventListener(
                         "click",
-                        function (event) {
+                        function (
+                            event
+                        ) {
 
                             event.stopPropagation();
 
@@ -591,12 +610,10 @@ document.addEventListener(
                 }
             );
 
-
             const imageWrappers =
                 photoGrid.querySelectorAll(
                     ".photo-image-wrapper"
                 );
-
 
             imageWrappers.forEach(
                 wrapper => {
@@ -614,22 +631,18 @@ document.addEventListener(
                                 return;
                             }
 
-
                             const photoId =
                                 card.dataset.photoId;
-
 
                             const checkbox =
                                 card.querySelector(
                                     ".photo-checkbox"
                                 );
 
-
                             if (checkbox) {
 
                                 checkbox.checked =
                                     !checkbox.checked;
-
 
                                 checkbox.dispatchEvent(
                                     new Event(
@@ -643,16 +656,10 @@ document.addEventListener(
             );
         }
 
-
-        /* =================================================
-           UPDATE SELECTION
-        ================================================= */
-
         function updateSelection() {
 
             const count =
                 selectedPhotos.length;
-
 
             if (selectedCounter) {
 
@@ -660,13 +667,11 @@ document.addEventListener(
                     `${count} selected`;
             }
 
-
             if (purchaseCount) {
 
                 purchaseCount.textContent =
                     count;
             }
-
 
             if (purchaseBar) {
 
@@ -676,30 +681,22 @@ document.addEventListener(
                 );
             }
 
-
             if (continuePaymentBtn) {
 
                 continuePaymentBtn.disabled =
                     count === 0;
             }
 
-
-            /* =============================================
-               HIGHLIGHT SELECTED CARDS
-            ============================================= */
-
             const cards =
                 photoGrid.querySelectorAll(
                     ".photo-card"
                 );
-
 
             cards.forEach(
                 card => {
 
                     const photoId =
                         card.dataset.photoId;
-
 
                     if (
                         selectedPhotos.includes(
@@ -721,11 +718,6 @@ document.addEventListener(
             );
         }
 
-
-        /* =================================================
-           SELECT ALL
-        ================================================= */
-
         if (selectAllBtn) {
 
             selectAllBtn.addEventListener(
@@ -737,16 +729,13 @@ document.addEventListener(
                         photos.length
                     ) {
 
-                        /* UNSELECT ALL */
-
-                        selectedPhotos = [];
-
+                        selectedPhotos =
+                            [];
 
                         const checkboxes =
                             photoGrid.querySelectorAll(
                                 ".photo-checkbox"
                             );
-
 
                         checkboxes.forEach(
                             checkbox => {
@@ -756,15 +745,13 @@ document.addEventListener(
                             }
                         );
 
-
-                        selectAllBtn.innerHTML = `
+                        selectAllBtn.innerHTML =
+                            `
                             <i class="fa-regular fa-square-check"></i>
                             Select All
-                        `;
+                            `;
 
                     } else {
-
-                        /* SELECT ALL */
 
                         selectedPhotos =
                             photos.map(
@@ -772,12 +759,10 @@ document.addEventListener(
                                     photo.id
                             );
 
-
                         const checkboxes =
                             photoGrid.querySelectorAll(
                                 ".photo-checkbox"
                             );
-
 
                         checkboxes.forEach(
                             checkbox => {
@@ -787,23 +772,17 @@ document.addEventListener(
                             }
                         );
 
-
-                        selectAllBtn.innerHTML = `
+                        selectAllBtn.innerHTML =
+                            `
                             <i class="fa-solid fa-square-check"></i>
                             Unselect All
-                        `;
+                            `;
                     }
-
 
                     updateSelection();
                 }
             );
         }
-
-
-        /* =================================================
-           CONTINUE TO PAYMENT
-        ================================================= */
 
         if (continuePaymentBtn) {
 
@@ -823,11 +802,6 @@ document.addEventListener(
                         return;
                     }
 
-
-                    /* =====================================
-                       SAVE SELECTION
-                    ===================================== */
-
                     sessionStorage.setItem(
                         "shotmarket_selected_photos",
                         JSON.stringify(
@@ -835,32 +809,40 @@ document.addEventListener(
                         )
                     );
 
-
                     sessionStorage.setItem(
                         "shotmarket_current_album",
                         albumId
                     );
 
-
-                    /* =====================================
-                       GO TO PAYMENT
-                    ===================================== */
+                    sessionStorage.setItem(
+                        "shotmarket_gallery_token",
+                        galleryToken
+                    );
 
                     window.location.href =
                         "payment.html?album=" +
                         encodeURIComponent(
                             albumId
+                        ) +
+                        "&token=" +
+                        encodeURIComponent(
+                            galleryToken
                         );
                 }
             );
         }
 
+        if (downloadPurchasedBtn) {
 
-        /* =================================================
-           LIGHTBOX
-        ================================================= */
+            downloadPurchasedBtn.addEventListener(
+                "click",
+                requestPurchasedDownloads
+            );
+        }
 
-        function openLightbox(index) {
+        function openLightbox(
+            index
+        ) {
 
             if (
                 !photos.length ||
@@ -870,13 +852,10 @@ document.addEventListener(
                 return;
             }
 
-
             currentLightboxIndex =
                 index;
 
-
             updateLightbox();
-
 
             if (lightbox) {
 
@@ -886,7 +865,6 @@ document.addEventListener(
             }
         }
 
-
         function updateLightbox() {
 
             const photo =
@@ -894,11 +872,9 @@ document.addEventListener(
                     currentLightboxIndex
                 ];
 
-
             if (!photo) {
                 return;
             }
-
 
             if (lightboxImage) {
 
@@ -910,18 +886,16 @@ document.addEventListener(
                     "ShotMarket Photo";
             }
 
-
             if (lightboxCounter) {
 
                 lightboxCounter.textContent =
-                    `${currentLightboxIndex + 1} / ${photos.length}`;
+                    `${
+                        currentLightboxIndex + 1
+                    } / ${
+                        photos.length
+                    }`;
             }
         }
-
-
-        /* =================================================
-           CLOSE LIGHTBOX
-        ================================================= */
 
         if (closeLightbox) {
 
@@ -939,11 +913,6 @@ document.addEventListener(
             );
         }
 
-
-        /* =================================================
-           PREVIOUS PHOTO
-        ================================================= */
-
         if (previousPhoto) {
 
             previousPhoto.addEventListener(
@@ -954,7 +923,6 @@ document.addEventListener(
                         return;
                     }
 
-
                     currentLightboxIndex =
                         (
                             currentLightboxIndex -
@@ -963,16 +931,10 @@ document.addEventListener(
                         ) %
                         photos.length;
 
-
                     updateLightbox();
                 }
             );
         }
-
-
-        /* =================================================
-           NEXT PHOTO
-        ================================================= */
 
         if (nextPhoto) {
 
@@ -984,7 +946,6 @@ document.addEventListener(
                         return;
                     }
 
-
                     currentLightboxIndex =
                         (
                             currentLightboxIndex +
@@ -992,16 +953,10 @@ document.addEventListener(
                         ) %
                         photos.length;
 
-
                     updateLightbox();
                 }
             );
         }
-
-
-        /* =================================================
-           CLOSE LIGHTBOX ON BACKDROP
-        ================================================= */
 
         if (lightbox) {
 
@@ -1022,11 +977,6 @@ document.addEventListener(
             );
         }
 
-
-        /* =================================================
-           KEYBOARD LIGHTBOX CONTROLS
-        ================================================= */
-
         document.addEventListener(
             "keydown",
             event => {
@@ -1040,7 +990,6 @@ document.addEventListener(
                     return;
                 }
 
-
                 if (
                     event.key ===
                     "Escape"
@@ -1051,7 +1000,6 @@ document.addEventListener(
                     );
                 }
 
-
                 if (
                     event.key ===
                     "ArrowLeft"
@@ -1059,7 +1007,6 @@ document.addEventListener(
 
                     previousPhoto?.click();
                 }
-
 
                 if (
                     event.key ===
@@ -1071,24 +1018,19 @@ document.addEventListener(
             }
         );
 
-
-        /* =================================================
-           FORMAT DATE
-        ================================================= */
-
-        function formatDate(dateString) {
+        function formatDate(
+            dateString
+        ) {
 
             if (!dateString) {
                 return "—";
             }
-
 
             const date =
                 new Date(
                     dateString +
                     "T00:00:00"
                 );
-
 
             if (
                 Number.isNaN(
@@ -1099,55 +1041,57 @@ document.addEventListener(
                 return dateString;
             }
 
-
             return date.toLocaleDateString(
                 undefined,
                 {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
+                    year:
+                        "numeric",
+                    month:
+                        "long",
+                    day:
+                        "numeric"
                 }
             );
         }
-
-
-        /* =================================================
-           SHOW ERROR
-        ================================================= */
 
         function showError() {
 
             if (photoGrid) {
 
-                photoGrid.innerHTML = "";
+                photoGrid.innerHTML =
+                    "";
             }
+
             if (emptyState) {
+
                 emptyState.style.display =
                     "none";
             }
+
             if (errorState) {
 
                 errorState.style.display =
                     "block";
             }
+
             if (purchaseBar) {
 
                 purchaseBar.style.display =
                     "none";
+
                 purchaseBar.classList.remove(
                     "active"
                 );
             }
         }
 
+        function escapeHTML(
+            value
+        ) {
 
-        /* =================================================
-           ESCAPE HTML
-        ================================================= */
-
-        function escapeHTML(value) {
-
-            return String(value)
+            return String(
+                value ?? ""
+            )
                 .replace(
                     /&/g,
                     "&amp;"

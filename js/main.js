@@ -1,8 +1,3 @@
-/* =========================================================
-   SHOTMARKET - MAIN INTERACTIVE ENGINE
-   Authentication + General UI
-   ========================================================= */
-
 document.addEventListener(
     "DOMContentLoaded",
     function () {
@@ -10,12 +5,6 @@ document.addEventListener(
         console.log(
             "ShotMarket Interactive Engine Loaded 🚀"
         );
-
-
-        /* =====================================================
-           PASSWORD VISIBILITY TOGGLE
-        ===================================================== */
-
         function setupPasswordToggle(
             inputId,
             buttonId
@@ -56,12 +45,6 @@ document.addEventListener(
             );
 
         }
-
-
-        /* =====================================================
-           REGISTER PASSWORD TOGGLES
-        ===================================================== */
-
         setupPasswordToggle(
             "registerPassword",
             "toggleRegisterPassword"
@@ -73,22 +56,10 @@ document.addEventListener(
             "toggleConfirmPassword"
         );
 
-
-        /* =====================================================
-           LOGIN PASSWORD TOGGLE
-        ===================================================== */
-
         setupPasswordToggle(
             "loginPassword",
             "toggleLoginPassword"
         );
-
-
-
-        /* =====================================================
-           REGISTER FORM
-        ===================================================== */
-
         const registerForm =
             document.getElementById(
                 "registerForm"
@@ -328,13 +299,6 @@ document.addEventListener(
                         loginForm.querySelector(
                             ".auth-submit"
                         );
-
-
-
-                    /* =========================================
-                       VALIDATION
-                    ========================================= */
-
                     if (!email) {
 
                         alert(
@@ -353,12 +317,6 @@ document.addEventListener(
 
                         return;
                     }
-
-
-
-                    /* =========================================
-                       BUTTON LOADING
-                    ========================================= */
 
                     if (submitBtn) {
 
@@ -439,13 +397,6 @@ document.addEventListener(
             );
 
         }
-
-
-
-        /* =====================================================
-           LOGOUT BUTTONS
-        ===================================================== */
-
         const logoutButtons =
             document.querySelectorAll(
                 "[data-logout]"

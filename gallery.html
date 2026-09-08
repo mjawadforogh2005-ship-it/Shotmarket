@@ -12,7 +12,6 @@
 
     <title>Gallery | ShotMarket</title>
 
-    <!-- Google Font -->
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -28,14 +27,10 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-
-    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
-
-    <!-- Your existing CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/navbar.css">
@@ -47,10 +42,6 @@
 
 
 <body>
-
-    <!-- ==================================================
-         NAVBAR
-         ================================================== -->
 
     <header class="gallery-header">
 
@@ -133,17 +124,7 @@
 
     </header>
 
-
-    <!-- ==================================================
-         MAIN GALLERY
-         ================================================== -->
-
     <main class="gallery-page">
-
-
-        <!-- ==================================================
-             ALBUM HERO
-             ================================================== -->
 
         <section class="album-hero container">
 
@@ -226,12 +207,6 @@
             </div>
 
         </section>
-
-
-        <!-- ==================================================
-             TOOLBAR
-             ================================================== -->
-
         <section class="gallery-toolbar container">
 
             <div>
@@ -274,11 +249,6 @@
 
         </section>
 
-
-        <!-- ==================================================
-             PHOTO GRID
-             ================================================== -->
-
         <section class="photo-section container">
 
             <div
@@ -289,10 +259,6 @@
                 <!-- JavaScript will insert photos here -->
 
             </div>
-
-
-            <!-- Empty state -->
-
             <div
                 id="emptyState"
                 class="empty-state"
@@ -359,12 +325,6 @@
 
 
     </main>
-
-
-    <!-- ==================================================
-         BOTTOM PURCHASE BAR
-         ================================================== -->
-
     <div
         id="purchaseBar"
         class="purchase-bar"
@@ -409,12 +369,17 @@
 
         </button>
 
+        <button
+            type="button"
+            id="downloadPurchasedBtn"
+            class="primary-btn"
+            style="display: none;"
+        >
+            Download Purchased Photos
+            <i class="fa-solid fa-download"></i>
+        </button>
+
     </div>
-
-
-    <!-- ==================================================
-         PHOTO LIGHTBOX
-         ================================================== -->
 
     <div
         id="lightbox"
@@ -464,10 +429,6 @@
 
     </div>
 
-
-    <!-- ==================================================
-         JAVASCRIPT
-         ================================================== -->
 <script src="js/main.js"></script>
 <script src="js/navbar.js"></script>
 <script type="module" src="js/gallery.js"></script>

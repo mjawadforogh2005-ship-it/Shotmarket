@@ -4,17 +4,11 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Dashboard | ShotMarket</title>
-
-
-    <!-- Google Fonts -->
-
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -30,23 +24,14 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
         rel="stylesheet"
     >
-
-
-    <!-- Font Awesome -->
-
-    <link
+        <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
-
-
-    <!-- ShotMarket CSS -->
-
     <link
         rel="stylesheet"
         href="css/variables.css"
     >
-
     <link
         rel="stylesheet"
         href="css/reset.css"
@@ -56,7 +41,6 @@
         rel="stylesheet"
         href="css/dashboard.css"
     >
-
     <link
         rel="stylesheet"
         href="css/responsive.css"
@@ -66,12 +50,6 @@
 
 
 <body>
-
-
-<!-- =========================================================
-     DASHBOARD NAVBAR
-========================================================= -->
-
 <header class="dashboard-header">
 
     <div class="dashboard-nav">
@@ -93,11 +71,6 @@
             <span>ShotMarket</span>
 
         </a>
-
-
-
-        <!-- NAVIGATION -->
-
         <nav class="dashboard-links">
 
             <a href="index.html">
@@ -107,8 +80,6 @@
                 Home
 
             </a>
-
-
             <a
                 href="dashboard.html"
                 class="active"
@@ -120,8 +91,7 @@
 
             </a>
 
-
-            <a href="gallery.html">
+            <a href="dashboard.html">
 
                 <i class="fa-regular fa-images"></i>
 
@@ -185,20 +155,7 @@
     </div>
 
 </header>
-
-
-
-<!-- =========================================================
-     MAIN DASHBOARD
-========================================================= -->
-
 <main class="dashboard-main">
-
-
-    <!-- =====================================================
-         WELCOME
-    ====================================================== -->
-
     <section class="dashboard-welcome">
 
 
@@ -233,10 +190,6 @@
 
         </div>
 
-
-
-        <!-- CREATE ALBUM -->
-
         <a
             href="upload.html"
             class="dashboard-create-btn"
@@ -251,18 +204,7 @@
 
 
     </section>
-
-
-
-    <!-- =====================================================
-         STATISTICS
-    ====================================================== -->
-
     <section class="stats-grid">
-
-
-        <!-- TOTAL ALBUMS -->
-
         <div class="stat-card">
 
 
@@ -297,11 +239,6 @@
 
 
         </div>
-
-
-
-        <!-- PHOTOS -->
-
         <div class="stat-card">
 
 
@@ -336,10 +273,6 @@
 
 
         </div>
-
-
-
-        <!-- DELIVERED -->
 
         <div class="stat-card">
 
@@ -376,9 +309,6 @@
 
         </div>
 
-
-
-        <!-- REVENUE -->
 
         <div class="stat-card">
 
@@ -418,18 +348,8 @@
 
     </section>
 
-
-
-    <!-- =====================================================
-         MAIN CONTENT GRID
-    ====================================================== -->
-
     <section class="dashboard-grid">
 
-
-        <!-- =================================================
-             RECENT ALBUMS
-        ================================================== -->
 
         <div class="dashboard-card albums-card">
 
@@ -465,13 +385,9 @@
 
 
             </div>
-
-
-
             <!--
                 REAL ALBUMS ARE LOADED HERE
-                FROM SUPABASE
-            -->
+                FROM SUPABASE-->
 
             <div id="recentAlbums">
 
@@ -526,13 +442,6 @@
 
 
         </div>
-
-
-
-        <!-- =================================================
-             QR CODE CARD
-        ================================================== -->
-
         <div class="dashboard-card qr-card">
 
 
@@ -569,9 +478,6 @@
 
 
             <div class="qr-content">
-
-
-                <!-- QR -->
 
                 <div class="qr-container">
 
@@ -648,12 +554,20 @@
 
 
     </section>
+    <section class="dashboard-section">
+        <div class="section-header">
+            <div>
+                <h2>Payment Requests</h2>
+                <p>Review customer bank transfer requests.</p>
+            </div>
+        </div>
 
-
-
-    <!-- =====================================================
-         QUICK ACTIONS
-    ====================================================== -->
+        <div id="paymentsContainer">
+            <div class="empty-state">
+                <p>No payment requests yet.</p>
+            </div>
+        </div>
+    </section>
 
     <section class="quick-section">
 
@@ -684,9 +598,6 @@
 
 
         <div class="quick-grid">
-
-
-            <!-- UPLOAD -->
 
             <a
                 href="upload.html"
@@ -724,10 +635,6 @@
 
 
             </a>
-
-
-
-            <!-- GALLERIES -->
 
             <a
                 href="gallery.html"
@@ -816,82 +723,28 @@
 
 </main>
 
-
-
-<!-- =========================================================
-     SCRIPTS
-========================================================= -->
-
-
-<!-- Supabase -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<!-- Your Supabase client -->
-
 <script src="js/supabase.js"></script>
-
-
-<!-- Authentication -->
-
 <script src="js/auth.js"></script>
-
-
-<!-- Existing project scripts -->
-
 <script
     type="module"
     src="js/main.js"
 ></script>
-
-
 <script src="js/navbar.js"></script>
-
-
 <script src="js/animations.js"></script>
-
-
-<!--
-    Old localStorage system remains loaded
-    for compatibility with other pages.
--->
-
 <script src="js/storage.js"></script>
-
-
-<!-- QR Code Library -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-
-<!-- QR functionality -->
-
 <script src="js/qr.js"></script>
-
-
-<!-- REAL DASHBOARD -->
-
 <script src="js/dashboard.js"></script>
+<script type="module" src="./js/payments-dashboard.js"></script>
 
-
-
-<!-- =========================================================
-     DASHBOARD AUTH + USER DISPLAY
-========================================================= -->
 
 <script>
 
 document.addEventListener(
     "DOMContentLoaded",
     async function () {
-
-
-        /*
-            Make sure the photographer
-            is logged in.
-        */
-
         const user =
             await requireLogin();
 
@@ -902,8 +755,6 @@ document.addEventListener(
 
         }
 
-
-
         console.log(
             "Logged in photographer:",
             user
@@ -912,12 +763,6 @@ document.addEventListener(
             user.user_metadata?.full_name ||
             user.email?.split("@")[0] ||
             "Photographer";
-
-
-
-        /*
-            Navbar name
-        */
 
         const userDisplayName =
             document.getElementById(
@@ -931,12 +776,6 @@ document.addEventListener(
                 fullName;
 
         }
-
-
-
-        /*
-            Welcome name
-        */
 
         const welcomeName =
             document.getElementById(
