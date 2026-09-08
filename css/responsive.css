@@ -73,3 +73,267 @@
 	}
 
 }
+
+/* =====================================================
+   MOBILE OPTIMIZATION FOR PAYMENT & GALLERY
+   ===================================================== */
+
+@media (max-width: 768px) {
+	
+	/* GALLERY PAGE */
+	.photo-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 8px;
+	}
+
+	.photo-card {
+		border-radius: 8px;
+	}
+
+	.photo-overlay {
+		padding: 12px;
+	}
+
+	/* PAYMENT PAGE */
+	.payment-container {
+		padding: 12px;
+	}
+
+	.payment-main-card {
+		padding: 16px;
+		border-radius: 12px;
+	}
+
+	.payment-amount {
+		font-size: 24px;
+	}
+
+	.confirm-payment {
+		padding: 14px 16px;
+		font-size: 16px;
+	}
+
+	/* DOWNLOAD SECTION */
+	.download-item {
+		padding: 12px;
+		gap: 12px;
+	}
+
+	.download-link-btn {
+		padding: 10px 14px;
+		font-size: 14px;
+	}
+
+	/* BUTTONS */
+	button {
+		min-height: 48px;
+		padding: 12px 16px;
+		font-size: 16px;
+		border-radius: 8px;
+	}
+
+	/* PAYMENT REQUEST CARDS */
+	.payment-request-card {
+		padding: 16px;
+	}
+
+	.payment-request-header {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.payment-amount {
+		text-align: left;
+	}
+
+	/* TEXT SIZE ADJUSTMENTS */
+	h2 {
+		font-size: 20px;
+	}
+
+	h3 {
+		font-size: 18px;
+	}
+
+	p {
+		font-size: 15px;
+	}
+}
+
+@media (max-width: 480px) {
+
+	/* ULTRA-MOBILE OPTIMIZATION */
+	
+	/* GALLERY GRID */
+	.photo-grid {
+		grid-template-columns: 1fr;
+		gap: 4px;
+	}
+
+	.photo-card {
+		aspect-ratio: 1 / 1;
+		border-radius: 6px;
+	}
+
+	/* PAYMENT PAGE */
+	.payment-container {
+		padding: 8px;
+	}
+
+	.payment-main-card {
+		padding: 12px;
+		gap: 12px;
+	}
+
+	.payment-badge {
+		font-size: 12px;
+		padding: 6px 12px;
+	}
+
+	.payment-info-item {
+		gap: 8px;
+	}
+
+	.payment-label {
+		font-size: 13px;
+	}
+
+	.payment-value {
+		font-size: 14px;
+	}
+
+	/* PAYMENT AMOUNT DISPLAY */
+	.amount-display {
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	/* BUTTONS - FULL WIDTH */
+	button {
+		width: 100%;
+		min-height: 46px;
+		padding: 12px;
+		font-size: 15px;
+	}
+
+	.confirm-payment {
+		width: 100%;
+		padding: 14px 12px;
+	}
+
+	/* DOWNLOAD SECTION */
+	.download-item {
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px;
+	}
+
+	.download-link-btn {
+		width: 100%;
+		padding: 12px;
+	}
+
+	/* BANK INFO */
+	.bank-info {
+		padding: 12px;
+		font-size: 13px;
+	}
+
+	.bank-field {
+		margin-bottom: 8px;
+	}
+
+	/* PAYMENT REQUEST CARDS */
+	.payment-request-card {
+		padding: 12px;
+	}
+
+	.payment-details {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.detail {
+		gap: 8px;
+	}
+
+	/* PAYMENT ACTIONS */
+	.payment-actions {
+		gap: 8px;
+	}
+
+	.approve-payment-btn {
+		width: 100%;
+	}
+
+	/* INPUT FIELDS */
+	input, textarea, select {
+		font-size: 16px;
+		padding: 12px;
+		border-radius: 6px;
+	}
+
+	/* TEXT SIZES */
+	h1 {
+		font-size: 22px;
+	}
+
+	h2 {
+		font-size: 18px;
+	}
+
+	h3 {
+		font-size: 16px;
+	}
+
+	h4 {
+		font-size: 14px;
+	}
+
+	p, small {
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	/* SPACING */
+	.container {
+		padding: 12px;
+	}
+
+	/* MODALS & DIALOGS */
+	.modal {
+		border-radius: 12px;
+		margin: 12px;
+	}
+
+	/* QR CODE DISPLAY */
+	#qr-code {
+		max-width: 100%;
+		width: 180px;
+		height: 180px;
+		margin: 12px auto;
+	}
+
+	/* COPY BUTTON */
+	.copy-btn {
+		width: 100%;
+		padding: 12px;
+		font-size: 14px;
+	}
+
+	/* LANDSCAPE MODE ADJUSTMENTS */
+	@media (orientation: landscape) {
+		.photo-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		h1 {
+			font-size: 18px;
+		}
+
+		button {
+			min-height: 40px;
+			padding: 10px;
+		}
+	}
+}

@@ -4,6 +4,15 @@ const paymentsContainer =
     document.getElementById("paymentsContainer");
 
 async function loadPayments() {
+    if (!paymentsContainer) return;
+    
+    paymentsContainer.innerHTML = `
+        <div class="loading-state">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <p>Loading payment requests...</p>
+        </div>
+    `;
+
     try {
         const {
             data: { user },
@@ -46,7 +55,9 @@ async function loadPayments() {
         if (!payments || payments.length === 0) {
             paymentsContainer.innerHTML = `
                 <div class="empty-state">
+                    <i class="fa-regular fa-inbox"></i>
                     <p>No pending payment requests.</p>
+                    <small>Payment requests will appear here when customers submit payments.</small>
                 </div>
             `;
             return;
@@ -62,59 +73,75 @@ async function loadPayments() {
                 const createdAt =
                     new Date(
                         payment.created_at
-                    ).toLocaleString();
+                    );
+
+                const daysAgo = Math.floor(
+                    (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+                );
+
+                const timeString = daysAgo === 0 
+                    ? "Today"
+                    : daysAgo === 1
+                    ? "Yesterday"
+                    : `${daysAgo} days ago`;
 
                 return `
-                    <div class="payment-card">
-                        <div class="payment-info">
-                            <h3>
-                                ${escapeHtml(
+                    <div class="payment-request-card pending">
+                        <div class="payment-request-header">
+                            <div class="payment-title">
+                                <h3>${escapeHtml(
                                     payment.albums?.name ||
                                     "Unknown Album"
-                                )}
-                            </h3>
+                                )}</h3>
+                                <span class="payment-badge pending">
+                                    <i class="fa-solid fa-clock"></i>
+                                    Pending Verification
+                                </span>
+                            </div>
+                            <div class="payment-amount">
+                                <strong>${Number(
+                                    payment.amount
+                                ).toLocaleString()}</strong>
+                                <span>${payment.currency}</span>
+                            </div>
+                        </div>
 
-                            <p>
-                                Amount:
-                                <strong>
-                                    ${Number(
-                                        payment.amount
-                                    ).toLocaleString()}
-                                    ${payment.currency}
-                                </strong>
-                            </p>
+                        <div class="payment-details">
+                            <div class="detail">
+                                <span class="label">
+                                    <i class="fa-regular fa-images"></i>
+                                    Photos Selected
+                                </span>
+                                <span class="value">${photoCount} photo${photoCount !== 1 ? 's' : ''}</span>
+                            </div>
 
-                            <p>
-                                Photos:
-                                ${photoCount}
-                            </p>
+                            <div class="detail">
+                                <span class="label">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    Submitted
+                                </span>
+                                <span class="value">${timeString}</span>
+                            </div>
 
-                            <p>
-                                Method:
-                                ${escapeHtml(
+                            <div class="detail">
+                                <span class="label">
+                                    <i class="fa-solid fa-money-bill"></i>
+                                    Method
+                                </span>
+                                <span class="value">${escapeHtml(
                                     payment.payment_method ||
                                     "Bank Transfer"
-                                )}
-                            </p>
-
-                            <p>
-                                Submitted:
-                                ${escapeHtml(createdAt)}
-                            </p>
-
-                            <p>
-                                Status:
-                                <strong>
-                                    ${escapeHtml(payment.status)}
-                                </strong>
-                            </p>
+                                )}</span>
+                            </div>
                         </div>
 
                         <div class="payment-actions">
                             <button
                                 class="approve-payment-btn"
                                 data-payment-id="${payment.id}"
+                                title="Confirm you received this payment"
                             >
+                                <i class="fa-solid fa-check"></i>
                                 Mark as Paid
                             </button>
                         </div>
@@ -128,7 +155,7 @@ async function loadPayments() {
             .forEach((button) => {
                 button.addEventListener(
                     "click",
-                    () => approvePayment(button.dataset.paymentId)
+                    () => approvePayment(button.dataset.paymentId, button)
                 );
             });
     } catch (error) {
@@ -138,23 +165,35 @@ async function loadPayments() {
         );
 
         paymentsContainer.innerHTML = `
-            <div class="empty-state">
-                <p>
-                    Could not load payment requests.
-                </p>
+            <div class="error-state">
+                <i class="fa-solid fa-exclamation-circle"></i>
+                <p>Could not load payment requests.</p>
+                <small>${error.message || 'Please try again later.'}</small>
             </div>
         `;
     }
 }
 
-async function approvePayment(paymentId) {
+async function approvePayment(paymentId, button) {
+    if (!button) {
+        button = document.querySelector(`[data-payment-id="${paymentId}"]`);
+    }
+
     const confirmed =
         confirm(
-            "Have you verified this bank transfer and want to mark this payment as paid?"
+            "⚠️  Before marking as paid, please confirm:\n\n✓ You verified the bank transfer\n✓ Amount matches the request\n✓ Payment is from the customer\n\nContinue?"
         );
 
     if (!confirmed) {
         return;
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Confirming...
+        `;
     }
 
     try {
@@ -171,7 +210,7 @@ async function approvePayment(paymentId) {
             throw error;
         }
 
-        alert("Payment marked as paid successfully.");
+        alert("✅ Payment confirmed! Customer can now download their photos.");
 
         await loadPayments();
     } catch (error) {
@@ -180,7 +219,15 @@ async function approvePayment(paymentId) {
             error
         );
 
-        alert("Could not approve this payment.");
+        alert("❌ Could not confirm this payment.\n\n" + (error.message || "Please try again later."));
+
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = `
+                <i class="fa-solid fa-check"></i>
+                Mark as Paid
+            `;
+        }
     }
 }
 

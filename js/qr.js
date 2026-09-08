@@ -6,6 +6,7 @@
 
 /**
  * Generate a customer gallery URL
+ * Uses production-ready configuration
  */
 function generateGalleryURL(albumId, galleryToken) {
 
@@ -19,6 +20,12 @@ function generateGalleryURL(albumId, galleryToken) {
         return "";
     }
 
+    // Use config if available, otherwise fallback to window.location
+    if (typeof ShotMarketConfig !== 'undefined') {
+        return ShotMarketConfig.getGalleryURL(albumId, galleryToken);
+    }
+
+    // Fallback for environments without config
     const baseURL = window.location.origin + window.location.pathname
         .split("/")
         .slice(0, -1)

@@ -135,12 +135,12 @@ document.addEventListener(
                 window.location.search
             );
 
-        const albumId =
+        let albumId =
             urlParams.get(
                 "album"
             );
 
-        const galleryToken =
+        let galleryToken =
             urlParams.get(
                 "token"
             );
@@ -162,7 +162,7 @@ document.addEventListener(
             !galleryToken
         ) {
 
-            showError();
+            showGalleryFinder();
 
             return;
         }
@@ -1082,6 +1082,126 @@ document.addEventListener(
                 purchaseBar.classList.remove(
                     "active"
                 );
+            }
+        }
+
+        async function showGalleryFinder() {
+
+            if (photoGrid) {
+
+                photoGrid.innerHTML = "";
+            }
+
+            if (emptyState) {
+
+                emptyState.style.display = "none";
+            }
+
+            if (errorState) {
+
+                errorState.style.display = "none";
+            }
+
+            const galleryFinder = document.getElementById("galleryFinder");
+            const albumsList = document.getElementById("albumsList");
+            const albumsContainer = document.getElementById("albumsContainer");
+            const form = document.getElementById("galleryAccessForm");
+
+            if (galleryFinder) {
+
+                galleryFinder.style.display = "block";
+            }
+
+            if (purchaseBar) {
+
+                purchaseBar.style.display = "none";
+            }
+
+            // Check if user is logged in
+            const sessionResult = await supabase.auth.getSession();
+            const session = sessionResult?.data?.session;
+
+            if (session) {
+
+                // Show photographer's albums
+                try {
+
+                    const { data: albums, error } = await supabase
+                        .from("albums")
+                        .select("id, name, description, created_at, gallery_token")
+                        .eq("user_id", session.user.id)
+                        .order("created_at", { ascending: false });
+
+                    if (error) throw error;
+
+                    if (albums && albums.length > 0) {
+
+                        albumsList.style.display = "block";
+                        albumsContainer.innerHTML = "";
+
+                        albums.forEach(album => {
+
+                            const albumCard = document.createElement("div");
+                            albumCard.style.cssText = `
+                                background: #16213e;
+                                border: 1px solid #333;
+                                padding: 15px;
+                                margin-bottom: 10px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            `;
+                            albumCard.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
+                                    <div>
+                                        <strong style="color: #fff; display: block; margin-bottom: 5px;">${escapeHTML(album.name)}</strong>
+                                        <small style="color: #888;">${escapeHTML(album.description || "No description")}</small>
+                                        <br>
+                                        <small style="color: #666; margin-top: 5px; display: block;">Token: ${album.gallery_token.substring(0, 8)}...</small>
+                                    </div>
+                                    <button type="button" class="primary-btn" style="white-space: nowrap;">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                        View
+                                    </button>
+                                </div>
+                            `;
+
+                            albumCard.querySelector("button").addEventListener("click", () => {
+
+                                const galleryURL = `gallery.html?album=${encodeURIComponent(album.id)}&token=${encodeURIComponent(album.gallery_token)}`;
+                                window.location.href = galleryURL;
+                            });
+
+                            albumsContainer.appendChild(albumCard);
+                        });
+
+                    }
+
+                } catch (error) {
+
+                    console.error("Error loading albums:", error);
+                }
+            }
+
+            // Handle manual gallery access form
+            if (form) {
+
+                form.addEventListener("submit", (e) => {
+
+                    e.preventDefault();
+
+                    const albumIdValue = document.getElementById("albumIdInput").value.trim();
+                    const tokenValue = document.getElementById("tokenInput").value.trim();
+
+                    if (!albumIdValue || !tokenValue) {
+
+                        alert("Please enter both Album ID and Token");
+                        return;
+                    }
+
+                    const galleryURL = `gallery.html?album=${encodeURIComponent(albumIdValue)}&token=${encodeURIComponent(tokenValue)}`;
+                    window.location.href = galleryURL;
+                });
             }
         }
 

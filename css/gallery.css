@@ -865,6 +865,52 @@
 
 
 /* =========================================================
+   GALLERY FINDER
+   ========================================================= */
+
+#galleryFinder {
+    padding: 50px 30px;
+}
+
+#galleryFinder .empty-icon {
+    font-size: 48px;
+}
+
+#albumsList {
+    text-align: left !important;
+}
+
+#albumsList h3 {
+    color: #f8fafc;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+#albumsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#galleryAccessForm {
+    margin-top: 30px;
+}
+
+#galleryAccessForm input {
+    transition: all 0.3s ease;
+}
+
+#galleryAccessForm input:focus {
+    border-color: #e7bf3c;
+    box-shadow: 0 0 0 3px rgba(231, 191, 60, 0.1);
+}
+
+#galleryAccessForm .primary-btn {
+    margin-top: 8px;
+}
+
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 

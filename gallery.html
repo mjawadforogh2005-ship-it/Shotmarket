@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <script src="js/config.js"></script>
+    <script src="js/ux-helpers.js"></script>
 
 </head>
 
@@ -318,6 +320,73 @@
                 >
                     Return Home
                 </a>
+
+            </div>
+
+            <!-- Gallery Finder (appears when no parameters) -->
+            
+            <div
+                id="galleryFinder"
+                class="empty-state"
+                style="display: none;"
+            >
+
+                <div class="empty-icon">
+
+                    <i class="fa-solid fa-qrcode"></i>
+
+                </div>
+
+                <h2>
+                    Access a Gallery
+                </h2>
+
+                <p>
+                    Scan a QR code or enter your gallery link to view photos.
+                </p>
+
+                <div id="albumsList" style="display: none; width: 100%; max-width: 600px; margin: 20px auto;">
+                    <h3 style="text-align: left; margin-bottom: 15px; color: #fff;">Your Albums</h3>
+                    <div id="albumsContainer" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+
+                <form id="galleryAccessForm" style="width: 100%; max-width: 500px; margin: 20px auto; display: flex; flex-direction: column; gap: 12px;">
+
+                    <input 
+                        type="text" 
+                        id="albumIdInput" 
+                        placeholder="Album ID (or scan QR)" 
+                        style="padding: 12px; border: 1px solid #333; background: #1a1a2e; color: #fff; border-radius: 6px; font-size: 14px;"
+                    >
+
+                    <input 
+                        type="text" 
+                        id="tokenInput" 
+                        placeholder="Gallery Token" 
+                        style="padding: 12px; border: 1px solid #333; background: #1a1a2e; color: #fff; border-radius: 6px; font-size: 14px;"
+                    >
+
+                    <button 
+                        type="submit" 
+                        class="primary-btn"
+                        style="width: 100%;"
+                    >
+                        <i class="fa-solid fa-arrow-right"></i>
+                        Access Gallery
+                    </button>
+
+                </form>
+
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                    <a href="login.html" class="secondary-btn">
+                        <i class="fa-solid fa-sign-in-alt"></i>
+                        Login as Photographer
+                    </a>
+                    <a href="index.html" class="secondary-btn">
+                        <i class="fa-solid fa-home"></i>
+                        Return Home
+                    </a>
+                </div>
 
             </div>
 

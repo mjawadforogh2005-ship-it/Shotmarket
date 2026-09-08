@@ -802,18 +802,62 @@ function updatePaymentStatusUI(status) {
     const statusElement =
         document.getElementById("paymentStatus");
 
+    const paymentSection =
+        document.querySelector(".payment-status-section");
+
     if (!statusElement) {
         return;
     }
 
     if (status === "pending") {
-        statusElement.textContent =
-            "Payment submitted — waiting for photographer verification.";
+        statusElement.innerHTML = `
+            <div class="status-pending">
+                <i class="fa-solid fa-clock"></i>
+                <div>
+                    <strong>Waiting for Verification</strong>
+                    <p>Your payment has been submitted. The photographer will verify receipt and approve your download shortly.</p>
+                </div>
+            </div>
+        `;
+        
+        if (paymentSection) {
+            paymentSection.classList.remove("status-paid", "status-failed");
+            paymentSection.classList.add("status-pending");
+        }
     }
 
     if (status === "paid") {
-        statusElement.textContent =
-            "Payment approved — your photos are ready.";
+        statusElement.innerHTML = `
+            <div class="status-approved">
+                <i class="fa-solid fa-check-circle"></i>
+                <div>
+                    <strong>Payment Approved!</strong>
+                    <p>Your payment has been verified. Click below to download your photos.</p>
+                </div>
+            </div>
+        `;
+        
+        if (paymentSection) {
+            paymentSection.classList.remove("status-pending", "status-failed");
+            paymentSection.classList.add("status-paid");
+        }
+    }
+
+    if (status === "failed") {
+        statusElement.innerHTML = `
+            <div class="status-failed">
+                <i class="fa-solid fa-exclamation-circle"></i>
+                <div>
+                    <strong>Payment Rejected</strong>
+                    <p>The photographer could not verify this payment. Please contact them to confirm the details.</p>
+                </div>
+            </div>
+        `;
+        
+        if (paymentSection) {
+            paymentSection.classList.remove("status-pending", "status-paid");
+            paymentSection.classList.add("status-failed");
+        }
     }
 }
 
@@ -887,7 +931,12 @@ async function requestDownloads(
     }
 
     button.disabled = true;
-    button.textContent = "Preparing downloads...";
+    button.innerHTML = `
+        <span>
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Preparing Your Downloads...
+        </span>
+    `;
 
     results.innerHTML = "";
 
@@ -921,44 +970,76 @@ async function requestDownloads(
             );
         }
 
-        results.innerHTML = data.downloads
+        if (data.downloads.length === 0) {
+            throw new Error(
+                "No photos are available for download."
+            );
+        }
+
+        results.innerHTML = `
+            <div class="download-success">
+                <p>Your secure download links are ready. They will expire in 2 hours.</p>
+            </div>
+            ${data.downloads
             .map((download) => `
                 <div class="download-item">
-                    <span>
-                        ${escapeHtml(
+                    <div class="download-info">
+                        <i class="fa-solid fa-image"></i>
+                        <span>
+                            ${escapeHtml(
                             download.file_name
                         )}
-                    </span>
+                        </span>
+                    </div>
 
                     <a
                         href="${download.downloadUrl}"
-                        target="_blank"
+                        download
+                        class="download-link-btn"
                         rel="noopener noreferrer"
                     >
+                        <i class="fa-solid fa-download"></i>
                         Download
                     </a>
                 </div>
             `)
-            .join("");
+            .join("")}
+        `;
 
-        button.textContent =
-            "Downloads Ready";
+        button.innerHTML = `
+            <i class="fa-solid fa-check"></i>
+            Downloads Prepared
+        `;
+        button.disabled = true;
+
     } catch (error) {
         console.error(
             "Download error:",
             error
         );
 
+        let errorMessage = "Could not prepare your downloads. Please try again.";
+        
+        if (error?.message?.includes("Payment has not been approved")) {
+            errorMessage = "Your payment is still pending. The photographer will approve it shortly.";
+        } else if (error?.message?.includes("Payment not found")) {
+            errorMessage = "Payment record not found. Please contact the photographer.";
+        } else if (error?.message?.includes("No photos")) {
+            errorMessage = "No photos available for download. Please check with the photographer.";
+        }
+
         results.innerHTML = `
-            <p>
-                Could not prepare your downloads.
-                Please try again.
-            </p>
+            <div class="download-error">
+                <i class="fa-solid fa-exclamation-circle"></i>
+                <p>${errorMessage}</p>
+            </div>
         `;
 
         button.disabled = false;
-        button.textContent =
-            "Download My Photos";
+        button.innerHTML = `
+            <i class="fa-solid fa-redo"></i>
+            Try Again
+        `;
     }
 }
 
