@@ -1,551 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShotMarket | Create Album</title>
-
-    <!-- Main Project CSS -->
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
-
-    <!-- Upload Page CSS -->
-    <link rel="stylesheet" href="css/upload.css">
-    
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/upload.css" />
     <script src="js/config.js"></script>
     <script src="js/ux-helpers.js"></script>
+  </head>
 
-</head>
-
-
-<body class="upload-page">
-
-
-<!-- =========================================
-     NAVIGATION
-========================================= -->
-
-<header>
-
-    <nav class="navbar container">
-
+  <body class="upload-page">
+    <header>
+      <nav class="navbar container">
         <div class="logo">
-
-            <i class="fa-solid fa-camera"></i>
-
-            <h2>ShotMarket</h2>
-
+          <i class="fa-solid fa-camera"></i>
+          <h2>ShotMarket</h2>
         </div>
-
 
         <ul class="nav-links">
+          <li>
+            <a href="index.html">Home</a>
+          </li>
+          <li>
+            <a href="index.html#features">Features</a>
+          </li>
+          <li>
+            <a href="gallery.html">Gallery</a>
+          </li>
+          <li>
+            <a href="pricing.html">Pricing</a>
+          </li>
 
-            <li>
-                <a href="index.html">Home</a>
-            </li>
-
-            <li>
-                <a href="index.html#features">Features</a>
-            </li>
-
-            <li>
-                <a href="gallery.html">Gallery</a>
-            </li>
-
-            <li>
-                <a href="pricing.html">Pricing</a>
-            </li>
-
-
-            <li>
-                <a href="contact.html">Contact</a>
-            </li>
-
+          <li>
+            <a href="contact.html">Contact</a>
+          </li>
         </ul>
 
-
         <div class="nav-buttons">
-
-            <a href="dashboard.html" class="login">
-                Dashboard
-            </a>
-
+          <a href="dashboard.html" class="login"> Dashboard </a>
         </div>
+      </nav>
+    </header>
 
-    </nav>
-
-</header>
-
-
-
-<!-- =========================================
-     PAGE HEADER
-========================================= -->
-
-<main class="upload-container">
-
-    <section class="upload-header">
-
-        <div class="upload-eyebrow">
-            Photographer Workspace
-        </div>
-
-        <h1>
-            Create a New Album
-        </h1>
-
+    <main class="upload-container">
+      <section class="upload-header">
+        <div class="upload-eyebrow">Photographer Workspace</div>
+        <h1>Create a New Album</h1>
         <p>
-            Upload your event photographs, organize your
-            customer gallery and generate a private QR code
-            for instant access.
+          Upload your event photographs, organize your customer gallery and
+          generate a private QR code for instant access.
         </p>
+      </section>
 
-    </section>
-
-
-
-    <!-- =========================================
-         ALBUM BUILDER
-    ========================================= -->
-
-    <section class="album-builder">
-
-
-        <!-- =====================================
-             LEFT SIDE
-        ====================================== -->
-
+      <section class="album-builder">
         <div class="upload-card">
+          <div class="card-title">
+            <h2>Album Information</h2>
+            <span>Step 01</span>
+          </div>
 
-            <div class="card-title">
-
-                <h2>Album Information</h2>
-
-                <span>Step 01</span>
-
+          <form id="albumForm">
+            <div class="form-group">
+              <label for="albumName"> Album Name </label>
+              <input
+                type="text"
+                id="albumName"
+                placeholder="e.g. Ahmad & Sara Wedding"
+                required
+              />
             </div>
 
+            <div class="form-row">
+              <div class="form-group">
+                <label for="eventDate"> Event Date </label>
+                <input type="date" id="eventDate" required />
+              </div>
 
-            <form id="albumForm">
+              <div class="form-group">
+                <label for="location"> Location </label>
+                <input
+                  type="text"
+                  id="location"
+                  placeholder="Astana, Kazakhstan"
+                  required
+                />
+              </div>
+            </div>
 
+            <div class="form-group">
+              <label for="description"> Description </label>
+              <textarea
+                id="description"
+                placeholder="Tell your customers something about this event..."
+              ></textarea>
+            </div>
 
-                <!-- Album Name -->
+            <div class="form-group">
+              <label> Gallery Privacy </label>
 
-                <div class="form-group">
-
-                    <label for="albumName">
-                        Album Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="albumName"
-                        placeholder="e.g. Ahmad & Sara Wedding"
-                        required
-                    >
-
+              <div class="privacy-options">
+                <div class="privacy-option">
+                  <input
+                    type="radio"
+                    name="privacy"
+                    id="private"
+                    value="private"
+                    checked
+                  />
+                  <label for="private">
+                    <strong> 🔒 Private Gallery </strong>
+                    <small>
+                      Only customers with the QR code can access the album.
+                    </small>
+                  </label>
                 </div>
 
-
-
-                <!-- Date + Location -->
-
-                <div class="form-row">
-
-
-                    <div class="form-group">
-
-                        <label for="eventDate">
-                            Event Date
-                        </label>
-
-                        <input
-                            type="date"
-                            id="eventDate"
-                            required
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label for="location">
-                            Location
-                        </label>
-
-                        <input
-                            type="text"
-                            id="location"
-                            placeholder="Astana, Kazakhstan"
-                            required
-                        >
-
-                    </div>
-
+                <div class="privacy-option">
+                  <input
+                    type="radio"
+                    name="privacy"
+                    id="public"
+                    value="public"
+                  />
+                  <label for="public">
+                    <strong> 🌐 Public Gallery </strong>
+                    <small>
+                      Anyone with the gallery link can view the album.
+                    </small>
+                  </label>
                 </div>
+              </div>
+            </div>
 
+            <div class="form-group">
+              <label> Upload Photos </label>
 
+              <div class="dropzone" id="dropzone">
+                <div class="upload-icon">📷</div>
 
-                <!-- Description -->
+                <h3>Drag & Drop your photos</h3>
 
-                <div class="form-group">
+                <p>Upload JPG, PNG or WEBP images</p>
 
-                    <label for="description">
-                        Description
-                    </label>
+                <label for="photoInput" class="browse-btn">
+                  Browse Photos
+                </label>
 
-                    <textarea
-                        id="description"
-                        placeholder="Tell your customers something about this event..."
-                    ></textarea>
+                <input type="file" id="photoInput" accept="image/*" multiple />
+              </div>
+            </div>
 
-                </div>
+            <div class="preview-section">
+              <div class="preview-header">
+                <h3>Selected Photos</h3>
+                <span class="photo-count" id="photoCount"> 0 photos </span>
+              </div>
 
+              <div class="photo-grid" id="photoGrid"></div>
+            </div>
 
+            <button type="submit" class="create-album-btn">
+              Create Album & Generate QR
+              <span> →</span>
+            </button>
 
-                <!-- Privacy -->
-
-                <div class="form-group">
-
-                    <label>
-                        Gallery Privacy
-                    </label>
-
-
-                    <div class="privacy-options">
-
-
-                        <div class="privacy-option">
-
-                            <input
-                                type="radio"
-                                name="privacy"
-                                id="private"
-                                value="private"
-                                checked
-                            >
-
-                            <label for="private">
-
-                                <strong>
-                                    🔒 Private Gallery
-                                </strong>
-
-                                <small>
-                                    Only customers with the QR code
-                                    can access the album.
-                                </small>
-
-                            </label>
-
-                        </div>
-
-
-
-                        <div class="privacy-option">
-
-                            <input
-                                type="radio"
-                                name="privacy"
-                                id="public"
-                                value="public"
-                            >
-
-                            <label for="public">
-
-                                <strong>
-                                    🌐 Public Gallery
-                                </strong>
-
-                                <small>
-                                    Anyone with the gallery link
-                                    can view the album.
-                                </small>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- =================================
-                     PHOTO UPLOAD
-                ================================== -->
-
-                <div class="form-group">
-
-                    <label>
-                        Upload Photos
-                    </label>
-
-
-                    <div
-                        class="dropzone"
-                        id="dropzone"
-                    >
-
-                        <div class="upload-icon">
-
-                            📷
-
-                        </div>
-
-
-                        <h3>
-                            Drag & Drop your photos
-                        </h3>
-
-
-                        <p>
-                            Upload JPG, PNG or WEBP images
-                        </p>
-
-
-                        <label
-                            for="photoInput"
-                            class="browse-btn"
-                        >
-                            Browse Photos
-                        </label>
-
-
-                        <input
-                            type="file"
-                            id="photoInput"
-                            accept="image/*"
-                            multiple
-                        >
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================
-                     PHOTO PREVIEW
-                ================================== -->
-
-                <div class="preview-section">
-
-                    <div class="preview-header">
-
-                        <h3>
-                            Selected Photos
-                        </h3>
-
-                        <span
-                            class="photo-count"
-                            id="photoCount"
-                        >
-                            0 photos
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="photo-grid"
-                        id="photoGrid"
-                    ></div>
-
-                </div>
-
-
-
-                <!-- =================================
-                     CREATE BUTTON
-                ================================== -->
-
-                <button
-                    type="submit"
-                    class="create-album-btn"
-                >
-
-                    Create Album & Generate QR
-
-                    <span> →</span>
-
-                </button>
-
-
-
-                <!-- SUCCESS -->
-
-                <div
-                    class="success-message"
-                    id="successMessage"
-                ></div>
-
-
-            </form>
-
+            <div class="success-message" id="successMessage"></div>
+          </form>
         </div>
-
-
-
-        <!-- =====================================
-             RIGHT SIDE - QR
-        ====================================== -->
 
         <aside class="upload-card qr-card">
+          <div class="card-title">
+            <h2>Customer Access</h2>
+            <span>Step 02</span>
+          </div>
 
-            <div class="card-title">
-
-                <h2>Customer Access</h2>
-
-                <span>Step 02</span>
-
+          <div class="qr-preview">
+            <div class="qr-placeholder" id="qrPlaceholder">
+              <span> QR code will appear here </span>
             </div>
 
+            <div id="qrcode"></div>
 
-            <div class="qr-preview">
+            <h3>Your Album QR Code</h3>
 
+            <p>
+              Customers can scan this QR code with their phone to open the
+              private photo gallery.
+            </p>
 
-                <!-- QR Placeholder -->
+            <div class="qr-status" id="qrStatus">● Waiting for album</div>
 
-                <div
-                    class="qr-placeholder"
-                    id="qrPlaceholder"
-                >
-
-                    <span>
-                        QR code will appear here
-                    </span>
-
-                </div>
-
-
-                <!-- Generated QR -->
-
-                <div id="qrcode"></div>
-
-
-                <h3>
-                    Your Album QR Code
-                </h3>
-
-
-                <p>
-                    Customers can scan this QR code
-                    with their phone to open the private
-                    photo gallery.
-                </p>
-
-
-                <div
-                    class="qr-status"
-                    id="qrStatus"
-                >
-                    ● Waiting for album
-                </div>
-
-
-                <button
-                    type="button"
-                    class="download-qr"
-                    id="downloadQr"
-                >
-                    ↓ Download QR Code
-                </button>
-
-
-            </div>
-
+            <button type="button" class="download-qr" id="downloadQr">
+              ↓ Download QR Code
+            </button>
+          </div>
         </aside>
+      </section>
+    </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
 
-    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-</main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <script src="js/supabase.js"></script>
 
+    <script src="js/auth.js"></script>
 
-<!-- =========================================
-     FONT AWESOME
-========================================= -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js">
-</script>
+    <script src="js/main.js"></script>
 
+    <script src="js/navbar.js"></script>
 
-<!-- =========================================
-     QR CODE LIBRARY
-========================================= -->
+    <script src="js/storage.js"></script>
 
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-</script>
-
-
-<!-- =========================================================
-     SHOTMARKET SCRIPTS
-========================================================= -->
-
-<!-- Supabase Library -->
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
-
-
-<!-- ShotMarket Supabase Connection -->
-<script
-    src="js/supabase.js">
-</script>
-
-
-<!-- Authentication -->
-<script
-    src="js/auth.js">
-</script>
-
-
-<!-- QR Code Library -->
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-</script>
-
-
-<!-- Main Website JavaScript -->
-<script
-    src="js/main.js">
-</script>
-
-
-<!-- Navbar -->
-<script
-    src="js/navbar.js">
-</script>
-
-
-<!-- Existing Local Storage Compatibility -->
-<script
-    src="js/storage.js">
-</script>
-
-
-<!-- Upload System -->
-<script
-    type="module"
-    src="js/upload.js">
-</script>
-
-
-</body>
-
+    <script type="module" src="js/upload.js"></script>
+  </body>
 </html>

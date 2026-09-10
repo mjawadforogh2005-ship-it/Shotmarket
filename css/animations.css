@@ -1,79 +1,40 @@
-.hero-left{
-
-animation:leftFade 1s ease;
-
+.hero-left {
+  animation: leftFade 1s ease;
 }
-
-.hero-right{
-
-animation:rightFade 1.2s ease;
-
+.hero-right {
+  animation: rightFade 1.2s ease;
 }
-
-.hero-image{
-
-animation:float 6s ease-in-out infinite;
-
+.hero-image {
+  animation: float 6s ease-in-out infinite;
 }
-
-@keyframes leftFade{
-
-from{
-
-opacity:0;
-
-transform:translateX(-70px);
-
+@keyframes leftFade {
+  from {
+    opacity: 0;
+    transform: translateX(-70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-
-to{
-
-opacity:1;
-
-transform:translateX(0);
-
+@keyframes rightFade {
+  from {
+    opacity: 0;
+    transform: translateX(70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-
-}
-
-@keyframes rightFade{
-
-from{
-
-opacity:0;
-
-transform:translateX(70px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateX(0);
-
-}
-
-}
-
-@keyframes float{
-
-0%{
-
-transform:translateY(0px);
-
-}
-
-50%{
-
-transform:translateY(-20px);
-
-}
-
-100%{
-
-transform:translateY(0px);
-
-}
-
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }

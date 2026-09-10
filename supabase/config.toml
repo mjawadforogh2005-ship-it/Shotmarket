@@ -1,2 +1,5 @@
 [functions.gallery-access]
 verify_jwt = false
+
+[functions.payment-details]
+verify_jwt = false

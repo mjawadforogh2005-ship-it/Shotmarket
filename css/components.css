@@ -1,89 +1,51 @@
-.primary-btn{
-
-display:inline-flex;
-
-align-items:center;
-
-gap:10px;
-
-padding:18px 34px;
-
-border-radius:999px;
-
-background:linear-gradient(135deg,#F5D76E,#D4AF37);
-
-color:#111;
-
-font-weight:700;
-
-transition:.35s;
-
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 34px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f5d76e, #d4af37);
+  color: #111;
+  font-weight: 700;
+  transition: 0.35s;
 }
-
-.primary-btn:hover{
-
-transform:translateY(-5px);
-
-box-shadow:0 20px 45px rgba(212,175,55,.35);
-
+.primary-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(212, 175, 55, 0.35);
 }
-
-.secondary-btn{
-
-padding:18px 34px;
-
-border-radius:999px;
-
-border:1px solid rgba(255,255,255,.15);
-
-background:rgba(255,255,255,.03);
-
-backdrop-filter:blur(12px);
-
-transition:.35s;
-
+.secondary-btn {
+  padding: 18px 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  transition: 0.35s;
 }
-
-.secondary-btn:hover{
-
-background:rgba(255,255,255,.08);
-
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
-
-
-/* =========================================
-   SHOTMARKET FEATURE LINKS
-========================================= */
 
 .feature-card {
-	text-decoration: none;
-	color: inherit;
-	cursor: pointer;
-	display: block;
-
-	transition:
-		transform 0.3s ease,
-		border-color 0.3s ease,
-		box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
-
 .feature-card:hover {
-	transform: translateY(-6px);
-
-	border-color: rgba(234, 193, 54, 0.55);
-
-	box-shadow:
-		0 18px 45px rgba(0, 0, 0, 0.25);
+  transform: translateY(-6px);
+  border-color: rgba(234, 193, 54, 0.55);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
 }
-
 .feature-card h3 {
-	color: #ffffff;
+  color: #ffffff;
 }
-
 .feature-card p {
-	color: #aab5c8;
+  color: #aab5c8;
 }
-
 .feature-card-wide {
-	text-align: center;
+  text-align: center;
 }
